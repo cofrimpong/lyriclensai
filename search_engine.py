@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from data_loader import load_songs
 from nlp_pipeline import clean_text, extract_keywords
 from vector_store import search_similar_songs
@@ -8,6 +10,7 @@ from vector_store import search_similar_songs
 MIN_RELEVANCE_SCORE = 0.28
 RELATIVE_RELEVANCE_RATIO = 0.6
 LOW_CONFIDENCE_RATIO = 0.92
+LOGGER = logging.getLogger(__name__)
 
 
 def semantic_search(query: str, filters: dict | None = None, top_k: int = 5) -> list[dict]:
@@ -18,8 +21,10 @@ def semantic_search(query: str, filters: dict | None = None, top_k: int = 5) -> 
 	if _is_direct_mood_browse(normalized_query, filters or {}):
 		return _build_direct_mood_results(normalized_query, filters or {}, top_k=top_k)
 
-	results = search_similar_songs(normalized_query, top_k=top_k, filters=filters, allow_cold_start=False)
-	if not results:
+	try:
+		results = search_similar_songs(normalized_query, top_k=top_k, filters=filters)
+	except Exception:
+		LOGGER.exception("AI search failed for query '%s'; using backup lexical search.", normalized_query)
 		results = _build_fast_fallback_results(normalized_query, filters or {}, top_k=top_k)
 	filtered_results = _filter_relevant_results(results)
 	return format_search_results(filtered_results, query=normalized_query)

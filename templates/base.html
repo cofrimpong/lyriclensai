@@ -64,23 +64,5 @@
     <script src="{{ url_for('static', filename='js/search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
-    <script>
-        (() => {
-            const warmVectorStore = () => {
-                fetch("{{ url_for('warmup') }}", {
-                    method: "POST",
-                    keepalive: true,
-                    headers: { "X-Requested-With": "lyriclens-warmup" },
-                }).catch(() => {});
-            };
-
-            if ("requestIdleCallback" in window) {
-                window.requestIdleCallback(warmVectorStore, { timeout: 1200 });
-                return;
-            }
-
-            window.setTimeout(warmVectorStore, 450);
-        })();
-    </script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import logging
 import re
 from functools import lru_cache
+from threading import Lock
 
 
 DEFAULT_EMBEDDING_MODEL = "all-MiniLM-L6-v2"
@@ -33,6 +35,9 @@ FALLBACK_STOP_WORDS = {
 }
 
 FALLBACK_TOKEN_PATTERN = re.compile(r"[a-z0-9&'-]+")
+LOGGER = logging.getLogger(__name__)
+_EMBEDDING_MODEL_CACHE: dict[str, object | None] = {}
+_EMBEDDING_MODEL_LOCK = Lock()
 
 
 def _normalize_basic_text(text: str) -> str:
@@ -141,18 +146,32 @@ def prepare_song_text(song: dict, include_keywords: bool = True) -> str:
 	return clean_text(f"{base_text} {' '.join(keywords)}")
 
 
-@lru_cache(maxsize=1)
 def load_embedding_model(model_name: str = DEFAULT_EMBEDDING_MODEL):
 	"""Load Sentence-BERT lazily when a compatible runtime is available."""
-	try:
-		from sentence_transformers import SentenceTransformer
-	except ImportError:
-		return None
+	if model_name in _EMBEDDING_MODEL_CACHE:
+		return _EMBEDDING_MODEL_CACHE[model_name]
 
-	try:
-		return SentenceTransformer(model_name)
-	except Exception:
-		return None
+	with _EMBEDDING_MODEL_LOCK:
+		if model_name in _EMBEDDING_MODEL_CACHE:
+			return _EMBEDDING_MODEL_CACHE[model_name]
+
+		LOGGER.info("Loading SentenceTransformer model '%s'.", model_name)
+		try:
+			from sentence_transformers import SentenceTransformer
+		except ImportError:
+			LOGGER.warning("sentence-transformers is unavailable; using fallback embeddings.")
+			_EMBEDDING_MODEL_CACHE[model_name] = None
+			return None
+
+		try:
+			model = SentenceTransformer(model_name)
+			LOGGER.info("Loaded SentenceTransformer model '%s'.", model_name)
+		except Exception:
+			LOGGER.exception("Failed to load SentenceTransformer model '%s'; using fallback embeddings.", model_name)
+			model = None
+
+		_EMBEDDING_MODEL_CACHE[model_name] = model
+		return model
 
 
 def generate_embedding(text: str, model_name: str = DEFAULT_EMBEDDING_MODEL) -> list[float]:

@@ -86,3 +86,14 @@ def test_semantic_search_uses_lyric_moment_and_lens_language():
 	results = semantic_search("lonely at the top pressure of success", top_k=5)
 	assert results
 	assert results[0]["title"] == "Lonely At The Top"
+
+
+def test_semantic_search_uses_backup_only_if_ai_search_fails(monkeypatch):
+	def fail_search(*args, **kwargs):
+		raise RuntimeError("vector search unavailable")
+
+	monkeypatch.setattr(search_engine, "search_similar_songs", fail_search)
+
+	results = semantic_search("heartbreak and healing", top_k=5)
+	assert results
+	assert any(result["title"] == "Someone Like You" for result in results)

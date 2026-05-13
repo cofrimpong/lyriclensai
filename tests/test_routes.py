@@ -80,6 +80,7 @@ def test_homepage_uses_mood_first_copy_without_stack_language():
     assert b"Find songs by feeling, not just by title." in response.data
     assert b"View Mood Dashboard" in response.data
     assert b"Lyric Lens Moment" in response.data
+    assert b"/warmup" not in response.data
     assert b"Technology Preview" not in response.data
     assert b"ChromaDB" not in response.data
     assert b"BERT" not in response.data

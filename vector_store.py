@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from math import sqrt
 from pathlib import Path
 from threading import Lock
@@ -10,6 +11,7 @@ from nlp_pipeline import DEFAULT_EMBEDDING_MODEL, clean_text, generate_embedding
 
 DEFAULT_COLLECTION_NAME = "lyriclens_songs"
 DEFAULT_PERSIST_DIRECTORY = Path(__file__).resolve().parent / "vector_db" / "chroma"
+LOGGER = logging.getLogger(__name__)
 
 _STORE_STATE = {
 	"backend": "memory",
@@ -18,7 +20,9 @@ _STORE_STATE = {
 	"client": None,
 	"collection": None,
 	"records": {},
+	"song_index": {},
 	"status": "idle",
+	"initialized": False,
 }
 
 _STORE_LOCK = Lock()
@@ -35,22 +39,25 @@ def initialize_vector_db(
 	chosen_backend = backend
 	client = None
 	collection = None
+	status = "idle"
 
 	if backend in {"auto", "chroma"}:
 		try:
 			import chromadb
 
 			client = chromadb.PersistentClient(path=str(persist_path))
-			try:
-				client.delete_collection(collection_name)
-			except Exception:
-				pass
 			collection = client.get_or_create_collection(name=collection_name, metadata={"hnsw:space": "cosine"})
 			chosen_backend = "chroma"
+			if collection.count() > 0:
+				status = "ready"
+				LOGGER.info("Using persisted Chroma collection '%s' with %s vectors.", collection_name, collection.count())
+			else:
+				LOGGER.info("Initialized empty Chroma collection '%s'.", collection_name)
 		except Exception:
 			if backend == "chroma":
 				raise
 			chosen_backend = "memory"
+			LOGGER.warning("ChromaDB unavailable; falling back to in-memory vector storage.")
 
 	_STORE_STATE.update(
 		{
@@ -60,7 +67,9 @@ def initialize_vector_db(
 			"client": client,
 			"collection": collection,
 			"records": {},
-			"status": "idle",
+			"song_index": _build_song_index(songs=load_songs()),
+			"status": status,
+			"initialized": True,
 		}
 	)
 	return _STORE_STATE
@@ -74,14 +83,17 @@ def build_vector_collection(
 ) -> list[dict]:
 	source_songs = songs if songs is not None else load_songs()
 	initialize_vector_db(persist_directory=persist_directory, backend=backend)
+	LOGGER.info("Building vector collection '%s' for %s songs.", _STORE_STATE["collection_name"], len(source_songs))
 	_STORE_STATE["status"] = "building"
 	try:
 		prepared_records = prepare_corpus_embeddings(source_songs, model_name=model_name)
 		add_song_embeddings(prepared_records)
 		_STORE_STATE["status"] = "ready"
+		LOGGER.info("Vector collection '%s' is ready.", _STORE_STATE["collection_name"])
 		return prepared_records
 	except Exception:
 		_STORE_STATE["status"] = "idle"
+		LOGGER.exception("Failed to build vector collection '%s'.", _STORE_STATE["collection_name"])
 		raise
 
 
@@ -95,7 +107,17 @@ def ensure_vector_collection(
 		return list(_STORE_STATE["records"].values())
 
 	with _STORE_LOCK:
+		if not _STORE_STATE["initialized"]:
+			initialize_vector_db(persist_directory=persist_directory, backend=backend)
+
 		if _STORE_STATE["records"]:
+			return list(_STORE_STATE["records"].values())
+
+		if _STORE_STATE["backend"] == "chroma" and _STORE_STATE["collection"] is not None and _STORE_STATE["collection"].count() > 0:
+			LOGGER.info("Loading persisted Chroma vectors into the local cache.")
+			_STORE_STATE["status"] = "loading"
+			_hydrate_records_from_collection()
+			_STORE_STATE["status"] = "ready"
 			return list(_STORE_STATE["records"].values())
 
 		return build_vector_collection(
@@ -129,12 +151,15 @@ def add_song_embeddings(songs: list[dict]) -> None:
 		prepared_record.setdefault("embedding", generate_embedding(prepared_record["prepared_text"]))
 		prepared_records.append(prepared_record)
 		_STORE_STATE["records"][prepared_record["id"]] = prepared_record
+		_STORE_STATE["song_index"][prepared_record["id"]] = {
+			key: value for key, value in prepared_record.items() if key != "embedding"
+		}
 
 	if _STORE_STATE["backend"] != "chroma" or _STORE_STATE["collection"] is None:
 		return
 
 	collection = _STORE_STATE["collection"]
-	collection.add(
+	collection.upsert(
 		ids=[str(song["id"]) for song in prepared_records],
 		embeddings=[song["embedding"] for song in prepared_records],
 		documents=[song["prepared_text"] for song in prepared_records],
@@ -262,4 +287,45 @@ def _build_metadata(song: dict) -> dict:
 		"themes": "|".join(song["themes"]),
 		"moods": "|".join(song["moods"]),
 		"summary": song["summary"],
+	}
+
+
+def _build_song_index(songs: list[dict] | None = None) -> dict[int, dict]:
+	source_songs = songs if songs is not None else load_songs()
+	return {song["id"]: dict(song) for song in source_songs}
+
+
+def _hydrate_records_from_collection() -> None:
+	collection = _STORE_STATE["collection"]
+	if collection is None:
+		return
+
+	stored = collection.get(include=["embeddings", "documents", "metadatas"])
+	records: dict[int, dict] = {}
+	for index, song_id in enumerate(stored.get("ids", [])):
+		numeric_id = int(song_id)
+		base_song = dict(_STORE_STATE["song_index"].get(numeric_id, {}))
+		metadata = stored.get("metadatas", [])[index] or {}
+		document = stored.get("documents", [])[index] or base_song.get("search_text", "")
+		embedding = stored.get("embeddings", [])[index] or []
+		records[numeric_id] = {
+			**base_song,
+			**_metadata_to_song_fields(metadata),
+			"prepared_text": document,
+			"embedding": [float(value) for value in embedding],
+		}
+
+	_STORE_STATE["records"] = records
+
+
+def _metadata_to_song_fields(metadata: dict) -> dict:
+	return {
+		"id": int(metadata.get("id", 0)) if metadata.get("id") is not None else 0,
+		"title": metadata.get("title", ""),
+		"artist": metadata.get("artist", ""),
+		"genre": metadata.get("genre", ""),
+		"era": metadata.get("era", ""),
+		"themes": [item for item in str(metadata.get("themes", "")).split("|") if item],
+		"moods": [item for item in str(metadata.get("moods", "")).split("|") if item],
+		"summary": metadata.get("summary", ""),
 	}

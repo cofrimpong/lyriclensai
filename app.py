@@ -1,6 +1,5 @@
-import os
+import logging
 from hashlib import md5
-from threading import Lock, Thread
 
 from flask import Flask, abort, redirect, render_template, request, url_for
 
@@ -11,8 +10,14 @@ from search_engine import semantic_search
 from vector_store import ensure_vector_collection, expand_genre_facets, get_related_songs
 
 
-_RUNTIME_WARMUP_LOCK = Lock()
-_RUNTIME_WARMUP_STARTED = False
+def configure_logging() -> None:
+    root_logger = logging.getLogger()
+    if not root_logger.handlers:
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+        return
+
+    if root_logger.level > logging.INFO:
+        root_logger.setLevel(logging.INFO)
 
 
 def get_corpus_facets(songs: list[dict]) -> dict:
@@ -166,29 +171,10 @@ def paginate_items(items: list[dict], page: int, page_size: int = 10) -> dict:
         "total_items": total_items,
         "page_size": page_size,
     }
-
-
-def start_runtime_warmup() -> None:
-    global _RUNTIME_WARMUP_STARTED
-
-    if os.environ.get("PYTEST_CURRENT_TEST"):
-        return
-
-    with _RUNTIME_WARMUP_LOCK:
-        if _RUNTIME_WARMUP_STARTED:
-            return
-
-        def warmup_vector_runtime() -> None:
-            ensure_vector_collection(songs=load_songs())
-
-        Thread(target=warmup_vector_runtime, name="lyriclens-warmup", daemon=True).start()
-        _RUNTIME_WARMUP_STARTED = True
-
-
 def create_app() -> Flask:
+    configure_logging()
     app = Flask(__name__)
     app.config.from_object(Config)
-    start_runtime_warmup()
 
     @app.route("/")
     def index():
