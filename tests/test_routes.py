@@ -129,6 +129,27 @@ def test_song_detail_route_renders_album_art_when_spotify_metadata_is_available(
     assert b"Album: Test Album" in response.data
 
 
+def test_song_detail_route_does_not_block_on_spotify_metadata_fetch(monkeypatch):
+    metadata_calls = []
+
+    monkeypatch.setattr("app.is_spotify_configured", lambda config: True)
+
+    def track_metadata(*args, **kwargs):
+        metadata_calls.append(kwargs.get("allow_fetch"))
+        return {}
+
+    monkeypatch.setattr("app.get_track_metadata", track_metadata)
+
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/songs/1")
+
+    assert response.status_code == 200
+    assert metadata_calls
+    assert all(call is False for call in metadata_calls)
+
+
 def test_spotify_connect_redirects_to_spotify_authorize(monkeypatch):
     monkeypatch.setattr("app.is_spotify_configured", lambda config: True)
     monkeypatch.setattr("app.build_authorize_url", lambda *args, **kwargs: "https://accounts.spotify.com/authorize?client_id=test")

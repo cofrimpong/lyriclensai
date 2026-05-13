@@ -70,6 +70,17 @@ def test_semantic_search_uses_fast_path_for_direct_mood_browse(monkeypatch):
 	assert all("emotional" in [mood.lower() for mood in result["moods"]] for result in results)
 
 
+def test_semantic_search_uses_fast_path_for_simple_library_query(monkeypatch):
+	def fail_if_called(*args, **kwargs):
+		raise AssertionError("vector search should not run for direct library browse")
+
+	monkeypatch.setattr(search_engine, "search_similar_songs", fail_if_called)
+
+	results = semantic_search("sad", top_k=5)
+	assert results
+	assert all("sad" in [mood.lower() for mood in result["moods"]] or "sad" in [theme.lower() for theme in result["themes"]] for result in results)
+
+
 def test_semantic_search_respects_filters():
 	initialize_vector_db(backend="memory")
 	build_vector_collection(songs=load_songs(), backend="memory")

@@ -257,6 +257,10 @@ def paginate_items(items: list[dict], page: int, page_size: int = 10) -> dict:
     }
 
 
+def collect_track_urls(songs: list[dict]) -> list[str]:
+    return [song["spotify_track_url"] for song in songs if song.get("spotify_track_url")]
+
+
 def create_app() -> Flask:
     configure_logging()
     app = Flask(__name__)
@@ -278,7 +282,11 @@ def create_app() -> Flask:
         rotating_lyrics = build_homepage_rotating_lyrics(songs, spotify_config=app.config)
         discovery_rails = build_discovery_rails(songs, spotify_config=app.config)
         highlights = decorate_song_collection(highlight_songs, spotify_config=app.config)
-        warm_metadata_cache_async([song["spotify_track_url"] for song in highlight_songs], app.config)
+        homepage_track_urls = collect_track_urls(highlight_songs)
+        homepage_track_urls.extend(collect_track_urls(rotating_lyrics))
+        for rail in discovery_rails:
+            homepage_track_urls.extend(collect_track_urls(rail["songs"]))
+        warm_metadata_cache_async(homepage_track_urls, app.config)
         return render_template(
             "index.html",
             highlights=highlights,
@@ -422,12 +430,14 @@ def create_app() -> Flask:
         if song is None:
             abort(404)
 
-        decorated_song = decorate_song(song, spotify_config=app.config, allow_spotify_fetch=True)
+        decorated_song = decorate_song(song, spotify_config=app.config, allow_spotify_fetch=False)
         related_songs = get_related_songs(song_id, top_k=3, allow_cold_start=False)
         if not related_songs:
             related_songs = build_related_preview(song, songs)
         related_songs = decorate_song_collection(related_songs, spotify_config=app.config)
-        warm_metadata_cache_async([related_song["spotify_track_url"] for related_song in related_songs], app.config)
+        track_urls = collect_track_urls([song])
+        track_urls.extend(collect_track_urls(related_songs))
+        warm_metadata_cache_async(track_urls, app.config)
         return render_template("song_detail.html", song=decorated_song, related_songs=related_songs)
 
     @app.route("/about")

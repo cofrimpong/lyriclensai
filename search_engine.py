@@ -21,6 +21,9 @@ def semantic_search(query: str, filters: dict | None = None, top_k: int = 5) -> 
 	if _is_direct_mood_browse(normalized_query, filters or {}):
 		return _build_direct_mood_results(normalized_query, filters or {}, top_k=top_k)
 
+	if _is_direct_library_browse(normalized_query, filters or {}):
+		return _build_direct_library_results(normalized_query, filters or {}, top_k=top_k)
+
 	try:
 		results = search_similar_songs(normalized_query, top_k=top_k, filters=filters)
 	except Exception:
@@ -101,6 +104,60 @@ def _build_direct_mood_results(normalized_query: str, filters: dict, top_k: int)
 				"similarity_percentage": 100,
 				"match_label": "Mood Match",
 				"explanation": f"Direct mood browse for {normalized_query} surfaced this song.",
+			}
+		)
+
+	matching_songs.sort(key=lambda item: (item["artist"], item["title"]))
+	return matching_songs[:top_k]
+
+
+def _is_direct_library_browse(normalized_query: str, filters: dict) -> bool:
+	if any(filters.get(key, "").strip() for key in ["genre", "mood", "era", "artist"]):
+		return False
+
+	tokens = normalized_query.split()
+	if not tokens or len(tokens) > 2:
+		return False
+
+	for song in load_songs():
+		searchable_values = [
+			clean_text(song.get("title", "")),
+			clean_text(song.get("artist", "")),
+			clean_text(song.get("genre", "")),
+			clean_text(song.get("era", "")),
+		]
+		searchable_values.extend(clean_text(item) for item in song.get("moods", []))
+		searchable_values.extend(clean_text(item) for item in song.get("themes", []))
+		if normalized_query in searchable_values:
+			return True
+
+	return False
+
+
+def _build_direct_library_results(normalized_query: str, filters: dict, top_k: int) -> list[dict]:
+	matching_songs = []
+	for song in load_songs():
+		if not _song_matches_filters(song, filters):
+			continue
+
+		searchable_values = {
+			clean_text(song.get("title", "")),
+			clean_text(song.get("artist", "")),
+			clean_text(song.get("genre", "")),
+			clean_text(song.get("era", "")),
+		}
+		searchable_values.update(clean_text(item) for item in song.get("moods", []))
+		searchable_values.update(clean_text(item) for item in song.get("themes", []))
+		if normalized_query not in searchable_values:
+			continue
+
+		matching_songs.append(
+			{
+				**song,
+				"similarity": 1.0,
+				"similarity_percentage": 100,
+				"match_label": "Library Match",
+				"explanation": f"Direct LyricLens browse for {normalized_query} surfaced this song from the current library.",
 			}
 		)
 
