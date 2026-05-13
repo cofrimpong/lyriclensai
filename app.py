@@ -1,4 +1,6 @@
+import os
 from hashlib import md5
+from threading import Lock, Thread
 
 from flask import Flask, abort, redirect, render_template, request, url_for
 
@@ -7,6 +9,10 @@ from config import Config
 from data_loader import load_songs
 from search_engine import semantic_search
 from vector_store import ensure_vector_collection, expand_genre_facets, get_related_songs
+
+
+_RUNTIME_WARMUP_LOCK = Lock()
+_RUNTIME_WARMUP_STARTED = False
 
 
 def get_corpus_facets(songs: list[dict]) -> dict:
@@ -162,9 +168,27 @@ def paginate_items(items: list[dict], page: int, page_size: int = 10) -> dict:
     }
 
 
+def start_runtime_warmup() -> None:
+    global _RUNTIME_WARMUP_STARTED
+
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return
+
+    with _RUNTIME_WARMUP_LOCK:
+        if _RUNTIME_WARMUP_STARTED:
+            return
+
+        def warmup_vector_runtime() -> None:
+            ensure_vector_collection(songs=load_songs())
+
+        Thread(target=warmup_vector_runtime, name="lyriclens-warmup", daemon=True).start()
+        _RUNTIME_WARMUP_STARTED = True
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
+    start_runtime_warmup()
 
     @app.route("/")
     def index():
@@ -246,7 +270,10 @@ def create_app() -> Flask:
             abort(404)
 
         decorated_song = decorate_song(song)
-        related_songs = decorate_song_collection(get_related_songs(song_id, top_k=3))
+        related_songs = get_related_songs(song_id, top_k=3, allow_cold_start=False)
+        if not related_songs:
+            related_songs = build_related_preview(song, songs)
+        related_songs = decorate_song_collection(related_songs)
         return render_template("song_detail.html", song=decorated_song, related_songs=related_songs)
 
     @app.route("/about")

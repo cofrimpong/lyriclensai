@@ -5,6 +5,11 @@ from nlp_pipeline import clean_text, extract_keywords
 from vector_store import search_similar_songs
 
 
+MIN_RELEVANCE_SCORE = 0.28
+RELATIVE_RELEVANCE_RATIO = 0.6
+LOW_CONFIDENCE_RATIO = 0.92
+
+
 def semantic_search(query: str, filters: dict | None = None, top_k: int = 5) -> list[dict]:
 	normalized_query = clean_text(query)
 	if not normalized_query:
@@ -13,8 +18,11 @@ def semantic_search(query: str, filters: dict | None = None, top_k: int = 5) -> 
 	if _is_direct_mood_browse(normalized_query, filters or {}):
 		return _build_direct_mood_results(normalized_query, filters or {}, top_k=top_k)
 
-	results = search_similar_songs(normalized_query, top_k=top_k, filters=filters)
-	return format_search_results(results, query=normalized_query)
+	results = search_similar_songs(normalized_query, top_k=top_k, filters=filters, allow_cold_start=False)
+	if not results:
+		results = _build_fast_fallback_results(normalized_query, filters or {}, top_k=top_k)
+	filtered_results = _filter_relevant_results(results)
+	return format_search_results(filtered_results, query=normalized_query)
 
 
 def format_search_results(results: list[dict], query: str = "") -> list[dict]:
@@ -93,3 +101,81 @@ def _build_direct_mood_results(normalized_query: str, filters: dict, top_k: int)
 
 	matching_songs.sort(key=lambda item: (item["artist"], item["title"]))
 	return matching_songs[:top_k]
+
+
+def _filter_relevant_results(results: list[dict]) -> list[dict]:
+	if not results:
+		return []
+
+	top_similarity = results[0]["similarity"]
+	if top_similarity >= MIN_RELEVANCE_SCORE:
+		minimum_similarity = max(MIN_RELEVANCE_SCORE, top_similarity * RELATIVE_RELEVANCE_RATIO)
+	else:
+		minimum_similarity = top_similarity * LOW_CONFIDENCE_RATIO
+
+	filtered_results = [result for result in results if result["similarity"] >= minimum_similarity]
+	return filtered_results or results[:1]
+
+
+def _build_fast_fallback_results(query: str, filters: dict, top_k: int) -> list[dict]:
+	query_keywords = extract_keywords(query) or query.split()
+	ranked_results = []
+
+	for song in load_songs():
+		if not _song_matches_filters(song, filters):
+			continue
+
+		prepared_text = clean_text(
+			" ".join(
+				[
+					song.get("lyric_moment", ""),
+					song.get("lyric_lens", ""),
+					" ".join(song.get("themes", [])),
+					" ".join(song.get("moods", [])),
+					song.get("title", ""),
+					song.get("artist", ""),
+					song.get("genre", ""),
+					song.get("era", ""),
+					song.get("summary", ""),
+				]
+			)
+		)
+
+		score = 0.0
+		if query and query in prepared_text:
+			score += 3.0
+
+		for keyword in query_keywords:
+			if keyword and keyword in prepared_text:
+				score += 1.0
+
+		if score <= 0:
+			continue
+
+		ranked_results.append(
+			{
+				**song,
+				"prepared_text": prepared_text,
+				"similarity": min(0.95, 0.24 + score * 0.06),
+			}
+		)
+
+	ranked_results.sort(key=lambda item: item["similarity"], reverse=True)
+	return ranked_results[:top_k]
+
+
+def _song_matches_filters(song: dict, filters: dict) -> bool:
+	genre = filters.get("genre", "").strip()
+	mood = filters.get("mood", "").strip()
+	era = filters.get("era", "").strip()
+	artist = filters.get("artist", "").strip()
+
+	if genre and genre.casefold() not in song.get("genre", "").casefold():
+		return False
+	if mood and mood not in song.get("moods", []):
+		return False
+	if era and era != song.get("era"):
+		return False
+	if artist and artist != song.get("artist"):
+		return False
+	return True

@@ -18,6 +18,7 @@ _STORE_STATE = {
 	"client": None,
 	"collection": None,
 	"records": {},
+	"status": "idle",
 }
 
 _STORE_LOCK = Lock()
@@ -59,6 +60,7 @@ def initialize_vector_db(
 			"client": client,
 			"collection": collection,
 			"records": {},
+			"status": "idle",
 		}
 	)
 	return _STORE_STATE
@@ -72,9 +74,15 @@ def build_vector_collection(
 ) -> list[dict]:
 	source_songs = songs if songs is not None else load_songs()
 	initialize_vector_db(persist_directory=persist_directory, backend=backend)
-	prepared_records = prepare_corpus_embeddings(source_songs, model_name=model_name)
-	add_song_embeddings(prepared_records)
-	return prepared_records
+	_STORE_STATE["status"] = "building"
+	try:
+		prepared_records = prepare_corpus_embeddings(source_songs, model_name=model_name)
+		add_song_embeddings(prepared_records)
+		_STORE_STATE["status"] = "ready"
+		return prepared_records
+	except Exception:
+		_STORE_STATE["status"] = "idle"
+		raise
 
 
 def ensure_vector_collection(
@@ -96,6 +104,14 @@ def ensure_vector_collection(
 			backend=backend,
 			persist_directory=persist_directory,
 		)
+
+
+def is_vector_collection_ready() -> bool:
+	return _STORE_STATE["status"] == "ready" and bool(_STORE_STATE["records"])
+
+
+def is_vector_collection_building() -> bool:
+	return _STORE_STATE["status"] == "building"
 
 
 def add_song_embeddings(songs: list[dict]) -> None:
@@ -126,8 +142,10 @@ def add_song_embeddings(songs: list[dict]) -> None:
 	)
 
 
-def search_similar_songs(query: str, top_k: int = 5, filters: dict | None = None) -> list[dict]:
+def search_similar_songs(query: str, top_k: int = 5, filters: dict | None = None, allow_cold_start: bool = True) -> list[dict]:
 	if not _STORE_STATE["records"]:
+		if not allow_cold_start:
+			return []
 		ensure_vector_collection()
 
 	normalized_query = clean_text(query)
@@ -151,8 +169,10 @@ def search_similar_songs(query: str, top_k: int = 5, filters: dict | None = None
 	return ranked_results[:top_k]
 
 
-def get_related_songs(song_id: int, top_k: int = 3) -> list[dict]:
+def get_related_songs(song_id: int, top_k: int = 3, allow_cold_start: bool = True) -> list[dict]:
 	if not _STORE_STATE["records"]:
+		if not allow_cold_start:
+			return []
 		ensure_vector_collection()
 
 	source_song = _STORE_STATE["records"].get(song_id)

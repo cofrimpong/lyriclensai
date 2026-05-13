@@ -41,6 +41,17 @@ def test_semantic_search_returns_matches():
 	assert all("similarity_percentage" in result for result in results)
 
 
+def test_semantic_search_filters_low_relevance_catalog_tail():
+	initialize_vector_db(backend="memory")
+	build_vector_collection(songs=load_songs(), backend="memory")
+
+	results = semantic_search("heartbreak and healing", top_k=20)
+	assert results
+	assert len(results) < 20
+	assert all(result["similarity"] >= 0.28 for result in results)
+	assert all(result["title"] != "Savage" for result in results)
+
+
 def test_semantic_search_returns_empty_list_for_blank_query():
 	initialize_vector_db(backend="memory")
 	build_vector_collection(songs=load_songs(), backend="memory")
