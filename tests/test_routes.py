@@ -39,6 +39,28 @@ def test_search_form_post_redirects_to_results():
     assert "/results?q=confidence+and+self-worth&genre=R%26B" in response.headers["Location"]
 
 
+def test_search_route_prefills_query_from_get_params():
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/search?q=heartbreak+healing")
+    assert response.status_code == 200
+    assert b">heartbreak healing</textarea>" in response.data
+
+
+def test_homepage_uses_mood_first_copy_without_stack_language():
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/")
+    assert response.status_code == 200
+    assert b"Find songs by feeling, not just by title." in response.data
+    assert b"View Mood Dashboard" in response.data
+    assert b"Technology Preview" not in response.data
+    assert b"ChromaDB" not in response.data
+    assert b"BERT" not in response.data
+
+
 def test_results_route_respects_filter_query_params():
     app = create_app()
     client = app.test_client()

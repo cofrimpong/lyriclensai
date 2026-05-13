@@ -59,6 +59,7 @@ def create_app() -> Flask:
     def search():
         songs = load_songs()
         facets = get_corpus_facets(songs)
+        initial_query = request.args.get("q", "").strip()
 
         if request.method == "POST":
             query = request.form.get("query", "").strip()
@@ -70,7 +71,7 @@ def create_app() -> Flask:
             }
             return redirect(url_for("results", q=query, **selected_filters))
 
-        return render_template("search.html", facets=facets)
+        return render_template("search.html", facets=facets, initial_query=initial_query)
 
     @app.route("/results")
     def results():

@@ -5,32 +5,52 @@
 {% block content %}
 <section class="hero-section">
     <div class="container py-5">
-        <div class="row align-items-center g-5 py-lg-5">
-            <div class="col-lg-7">
-                <span class="eyebrow">Semantic Music Discovery</span>
-                <h1 class="display-4 hero-title">Discover songs by meaning, not just keywords.</h1>
-                <p class="hero-copy">LyricLens AI is a live music discovery tool that helps users search songs by mood, meaning, genre, and emotional themes.</p>
+        <div class="hero-shell py-lg-5">
+            <div class="hero-copy-column">
+                <span class="eyebrow">Music Discovery By Mood</span>
+                <h1 class="display-3 hero-title">Find songs by feeling, not just by title.</h1>
+                <p class="hero-copy hero-copy-large">LyricLens AI helps you explore music through mood, emotion, genre, and meaning. Search what you feel, and discover songs that match the energy.</p>
                 <div class="hero-metrics mt-4">
-                    <div class="metric-pill"><strong>{{ total_songs }}</strong><span>songs ready for meaning-based discovery</span></div>
-                    <div class="metric-pill"><strong>4 layers</strong><span>metadata, embeddings, vector search, analytics</span></div>
+                    <div class="metric-pill"><strong>{{ total_songs }}</strong><span>songs ready to explore by feeling</span></div>
+                    <div class="metric-pill"><strong>6 moods</strong><span>from heartbreak and healing to confidence and joy</span></div>
                 </div>
                 <div class="d-flex flex-wrap gap-3 mt-4">
-                    <a class="btn btn-glow btn-lg" href="{{ url_for('search') }}">Search by mood, meaning, and theme</a>
-                    <a class="btn btn-outline-light btn-lg" href="{{ url_for('about') }}">See how it works</a>
+                    <a class="btn btn-glow btn-lg" href="{{ url_for('search') }}">Start Exploring</a>
+                    <a class="btn btn-outline-light btn-lg" href="{{ url_for('dashboard') }}">View Mood Dashboard</a>
                 </div>
+                <p class="hero-caption mt-4">Search by mood, memory, or emotion. Let your mood guide the search.</p>
             </div>
-            <div class="col-lg-5">
-                <div class="feature-panel waveform-panel">
-                    <p class="panel-label">Discovery Signals</p>
-                    <div class="wave-bars" aria-hidden="true">
-                        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <div class="hero-visual-column">
+                <div class="hero-aura"></div>
+                <div class="hero-visual glass-card">
+                    <div class="hero-visual-head">
+                        <span class="panel-label">Live Discovery Mix</span>
+                        <div class="wave-bars hero-wave-bars" aria-hidden="true">
+                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        </div>
                     </div>
-                    <ul class="feature-list">
-                        <li>Natural language theme search</li>
-                        <li>Mood-aware recommendation flow</li>
-                        <li>Dashboard intelligence for music patterns</li>
-                        <li>Copyright-safe song descriptions</li>
-                    </ul>
+                    <div class="floating-card-grid">
+                        <a class="floating-mood-card card-heartbreak" href="{{ url_for('search', q='heartbreak healing') }}">
+                            <strong>heartbreak + healing</strong>
+                            <span>search this feeling</span>
+                        </a>
+                        <a class="floating-mood-card card-confidence" href="{{ url_for('search', q='confidence empowerment') }}">
+                            <strong>confidence + power</strong>
+                            <span>find bold energy</span>
+                        </a>
+                        <a class="floating-mood-card card-joy" href="{{ url_for('search', q='joy celebration') }}">
+                            <strong>joy + celebration</strong>
+                            <span>open bright tracks</span>
+                        </a>
+                        <a class="floating-mood-card card-pressure" href="{{ url_for('search', q='fame pressure') }}">
+                            <strong>fame + pressure</strong>
+                            <span>explore the tension</span>
+                        </a>
+                        <a class="floating-mood-card card-love" href="{{ url_for('search', q='love intimacy') }}">
+                            <strong>love + intimacy</strong>
+                            <span>lean into closeness</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,26 +60,113 @@
 <section class="content-section">
     <div class="container py-5">
         <div class="section-heading narrow mb-4">
-            <span class="eyebrow">What You Can Explore</span>
-            <h2>A discovery flow built around feeling, context, and narrative</h2>
+            <span class="eyebrow">Mood Paths</span>
+            <h2>What are you in the mood for?</h2>
         </div>
         <div class="row g-4">
-            <div class="col-md-4">
-                <article class="glass-card h-100">
-                    <h2>Meaning-First Search</h2>
-                    <p>Users search with ideas like heartbreak, confidence, healing, and growth rather than relying on exact lyric matches.</p>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='heartbreak healing') }}">
+                    <span class="badge-soft">Heartbreak &amp; Healing</span>
+                    <h3>Find songs that hold pain, release, and recovery together.</h3>
+                    <p>Explore heartbreak, healing, and emotional afterglow without chasing exact titles.</p>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='confidence empowerment') }}">
+                    <span class="badge-soft">Confidence &amp; Power</span>
+                    <h3>Discover music that matches your energy when you want to feel unstoppable.</h3>
+                    <p>Search by self-worth, boldness, empowerment, and rising momentum.</p>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='joy celebration') }}">
+                    <span class="badge-soft">Joy &amp; Celebration</span>
+                    <h3>Pull up bright songs for freedom, movement, and nights that deserve a soundtrack.</h3>
+                    <p>Let the search lean into joy, celebration, and high-energy release.</p>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='love intimacy') }}">
+                    <span class="badge-soft">Love &amp; Intimacy</span>
+                    <h3>Move through closeness, desire, softness, and emotional connection.</h3>
+                    <p>Search by mood, memory, or emotion when the feeling is personal and close.</p>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='fame pressure') }}">
+                    <span class="badge-soft">Fame &amp; Pressure</span>
+                    <h3>Explore songs that carry ambition, visibility, stress, and the cost of being seen.</h3>
+                    <p>Find tracks shaped by pressure, image, ambition, and emotional weight.</p>
+                </a>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='growth reflection') }}">
+                    <span class="badge-soft">Growth &amp; Reflection</span>
+                    <h3>Find songs for quiet progress, lessons learned, and the feeling of becoming.</h3>
+                    <p>Explore reflection, healing, growth, and emotional clarity in one click.</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section section-alt">
+    <div class="container py-5">
+        <div class="section-heading narrow mb-4">
+            <span class="eyebrow">Featured Sounds</span>
+            <h2>Start with a few standout songs, then follow the feeling further</h2>
+        </div>
+        <div class="row g-4">
+            {% for song in highlights %}
+            <div class="col-md-6 col-xl-3">
+                <article class="glass-card h-100 spotlight-card spotlight-link">
+                    <span class="badge-soft">{{ song.genre }}</span>
+                    <h3><a class="stretched-link text-decoration-none text-reset" href="{{ url_for('song_detail', song_id=song.id) }}">{{ song.title }}</a></h3>
+                    <p class="card-meta">{{ song.artist }}</p>
+                    <div class="tag-row mb-3">
+                        {% for mood in song.moods %}
+                        <span class="mood-tag">{{ mood }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="action-row mt-auto">
+                        <a class="btn btn-outline-light position-relative z-2" href="{{ url_for('song_detail', song_id=song.id) }}">Explore Similar</a>
+                        {% if song.spotify_track_url %}
+                        <a class="btn btn-spotify position-relative z-2" href="{{ song.spotify_track_url }}" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+                        {% endif %}
+                    </div>
                 </article>
             </div>
-            <div class="col-md-4">
-                <article class="glass-card h-100">
-                    <h2>AI + NLP Stack</h2>
-                    <p>Flask, optional NLP enrichment, Sentence-BERT, ChromaDB, and analytics tooling work together to power semantic music discovery.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container py-5">
+        <div class="section-heading narrow mb-4">
+            <span class="eyebrow">How It Works</span>
+            <h2>Simple discovery, built around what you feel like hearing</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">1</span>
+                    <h3>Describe a feeling</h3>
+                    <p>Type something like “songs about healing after heartbreak.”</p>
                 </article>
             </div>
-            <div class="col-md-4">
-                <article class="glass-card h-100">
-                    <h2>Portfolio-Ready UI</h2>
-                    <p>The interface uses a polished dark neon visual system built for a modern music-tech discovery experience.</p>
+            <div class="col-lg-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">2</span>
+                    <h3>Explore matching songs</h3>
+                    <p>LyricLens finds songs with similar moods, themes, and emotional patterns.</p>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">3</span>
+                    <h3>Open and listen</h3>
+                    <p>Use Spotify links to jump from discovery to listening without breaking the mood.</p>
                 </article>
             </div>
         </div>
@@ -68,41 +175,13 @@
 
 <section class="content-section section-alt">
     <div class="container py-5">
-        <div class="section-heading">
-            <span class="eyebrow">How It Works</span>
-            <h2>Built for live music discovery powered by meaning</h2>
-        </div>
-        <div class="row g-4 mt-2">
-            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Flask</span><strong>App foundation</strong></div></div>
-            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>NLP</span><strong>Text cleanup and keywords</strong></div></div>
-            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Sentence-BERT</span><strong>Semantic embeddings</strong></div></div>
-            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>ChromaDB</span><strong>Vector search layer</strong></div></div>
-        </div>
-    </div>
-</section>
-
-<section class="content-section">
-    <div class="container py-5">
-        <div class="section-heading narrow mb-4">
-            <span class="eyebrow">Featured Songs</span>
-            <h2>A sample of the songs LyricLens AI can surface by feeling and theme</h2>
-        </div>
-        <div class="row g-4">
-            {% for song in highlights %}
-            <div class="col-md-6 col-xl-3">
-                <article class="glass-card h-100 spotlight-card">
-                    <span class="badge-soft">{{ song.genre }}</span>
-                    <h3>{{ song.title }}</h3>
-                    <p class="card-meta">{{ song.artist }} · {{ song.era }}</p>
-                    <p>{{ song.summary }}</p>
-                    <div class="tag-row">
-                        {% for theme in song.themes %}
-                        <span class="theme-tag">{{ theme }}</span>
-                        {% endfor %}
-                    </div>
-                </article>
+        <div class="glass-card homepage-cta">
+            <div>
+                <span class="eyebrow">Next Search</span>
+                <h2>Ready to find your next song by mood?</h2>
+                <p>Explore heartbreak, confidence, healing, joy, reflection, and everything in between.</p>
             </div>
-            {% endfor %}
+            <a class="btn btn-glow btn-lg" href="{{ url_for('search') }}">Search Your Feeling</a>
         </div>
     </div>
 </section>

@@ -42,6 +42,98 @@ a {
     overflow-x: hidden;
 }
 
+.music-note-field {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.music-note {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.16);
+    text-shadow: 0 0 22px currentColor;
+    filter: blur(0.15px);
+    animation: note-drift 18s linear infinite, note-pulse 6s ease-in-out infinite;
+}
+
+.note-1,
+.note-6 {
+    color: rgba(34, 211, 238, 0.18);
+}
+
+.note-2,
+.note-5 {
+    color: rgba(236, 72, 153, 0.18);
+}
+
+.note-3,
+.note-7 {
+    color: rgba(139, 92, 246, 0.18);
+}
+
+.note-4,
+.note-8 {
+    color: rgba(245, 158, 11, 0.16);
+}
+
+.note-1 {
+    left: 4%;
+    top: 72%;
+    font-size: 2.1rem;
+    animation-delay: -2s;
+}
+
+.note-2 {
+    left: 14%;
+    top: 18%;
+    font-size: 1.7rem;
+    animation-delay: -7s;
+}
+
+.note-3 {
+    left: 83%;
+    top: 12%;
+    font-size: 2.4rem;
+    animation-delay: -4s;
+}
+
+.note-4 {
+    left: 92%;
+    top: 58%;
+    font-size: 1.8rem;
+    animation-delay: -11s;
+}
+
+.note-5 {
+    left: 64%;
+    top: 76%;
+    font-size: 2rem;
+    animation-delay: -8s;
+}
+
+.note-6 {
+    left: 47%;
+    top: 8%;
+    font-size: 1.5rem;
+    animation-delay: -13s;
+}
+
+.note-7 {
+    left: 26%;
+    top: 48%;
+    font-size: 2.2rem;
+    animation-delay: -5s;
+}
+
+.note-8 {
+    left: 74%;
+    top: 36%;
+    font-size: 1.65rem;
+    animation-delay: -10s;
+}
+
 .aurora {
     position: fixed;
     width: 32rem;
@@ -129,6 +221,11 @@ a {
     line-height: 1.05;
 }
 
+.hero-title {
+    font-size: clamp(3.4rem, 7vw, 5.4rem);
+    max-width: 11ch;
+}
+
 .hero-copy,
 .section-heading p,
 .glass-card p,
@@ -164,6 +261,21 @@ a {
     padding: 1.75rem;
 }
 
+.glass-card,
+.btn,
+.related-item {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.glass-card:hover,
+.glass-card:focus-within,
+.related-item:hover,
+.related-item:focus {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 56px rgba(34, 211, 238, 0.14);
+    border-color: rgba(34, 211, 238, 0.22);
+}
+
 .panel-label {
     color: var(--accent-success);
     text-transform: uppercase;
@@ -184,6 +296,199 @@ a {
 
 .section-heading {
     max-width: 760px;
+}
+
+.hero-shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 2rem;
+    align-items: center;
+}
+
+.hero-copy-column,
+.hero-visual-column {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-copy-large {
+    max-width: 42rem;
+    font-size: 1.18rem;
+}
+
+.hero-caption {
+    max-width: 34rem;
+    color: rgba(248, 250, 252, 0.78);
+}
+
+.hero-aura {
+    position: absolute;
+    inset: 8% 12% 6% 10%;
+    border-radius: 36px;
+    background:
+        radial-gradient(circle at 24% 28%, rgba(236, 72, 153, 0.18), transparent 30%),
+        radial-gradient(circle at 72% 24%, rgba(34, 211, 238, 0.18), transparent 28%),
+        radial-gradient(circle at 54% 78%, rgba(139, 92, 246, 0.22), transparent 30%);
+    filter: blur(26px);
+    z-index: 0;
+}
+
+.hero-visual {
+    position: relative;
+    overflow: hidden;
+    min-height: 34rem;
+    padding: 1.4rem;
+}
+
+.hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.12), transparent 24%),
+        radial-gradient(circle at 80% 18%, rgba(236, 72, 153, 0.12), transparent 22%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 45%);
+    pointer-events: none;
+}
+
+.hero-visual-head {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-wave-bars {
+    height: 4.25rem;
+    margin: 0.85rem 0 0;
+}
+
+.floating-card-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+}
+
+.floating-mood-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-height: 7.25rem;
+    padding: 1.05rem 1.15rem;
+    border-radius: 22px;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: rgba(11, 16, 32, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 20px 42px rgba(8, 10, 18, 0.28);
+    animation: floating-card 7s ease-in-out infinite;
+}
+
+.floating-mood-card strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.06rem;
+    line-height: 1.25;
+    text-transform: capitalize;
+}
+
+.floating-mood-card span {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+}
+
+.floating-mood-card:hover,
+.floating-mood-card:focus {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 28px 48px rgba(236, 72, 153, 0.16);
+}
+
+.card-heartbreak {
+    background: linear-gradient(180deg, rgba(56, 20, 49, 0.9), rgba(14, 18, 34, 0.84));
+}
+
+.card-confidence {
+    background: linear-gradient(180deg, rgba(20, 39, 60, 0.92), rgba(14, 18, 34, 0.84));
+    animation-delay: -1.3s;
+}
+
+.card-joy {
+    background: linear-gradient(180deg, rgba(54, 42, 17, 0.9), rgba(14, 18, 34, 0.84));
+    animation-delay: -2.4s;
+}
+
+.card-pressure {
+    background: linear-gradient(180deg, rgba(27, 26, 55, 0.9), rgba(14, 18, 34, 0.84));
+    animation-delay: -3.2s;
+}
+
+.card-love {
+    grid-column: 1 / -1;
+    background: linear-gradient(180deg, rgba(56, 18, 39, 0.88), rgba(14, 18, 34, 0.84));
+    animation-delay: -4.4s;
+}
+
+.mood-journey-card,
+.spotlight-link {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary);
+}
+
+.mood-journey-card h3,
+.home-info-card h3,
+.homepage-cta h2 {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.mood-journey-card h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.35rem;
+    line-height: 1.2;
+}
+
+.mood-journey-card p {
+    margin-bottom: 0;
+}
+
+.spotlight-link {
+    position: relative;
+    gap: 0.95rem;
+}
+
+.spotlight-link .tag-row {
+    min-height: 3rem;
+}
+
+.spotlight-link .action-row {
+    margin-top: auto;
+}
+
+.home-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.home-info-card p {
+    margin-bottom: 0;
+}
+
+.homepage-cta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    align-items: center;
+}
+
+.homepage-cta p {
+    max-width: 40rem;
+    margin-bottom: 0;
 }
 
 .section-heading.narrow,
@@ -798,9 +1103,54 @@ a {
     }
 }
 
+@keyframes floating-card {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes note-drift {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(18px, -18px, 0);
+    }
+    100% {
+        transform: translate3d(-8px, -42px, 0);
+    }
+}
+
+@keyframes note-pulse {
+    0%,
+    100% {
+        opacity: 0.18;
+    }
+    50% {
+        opacity: 0.34;
+    }
+}
+
 @media (max-width: 991.98px) {
+    .hero-shell,
+    .homepage-cta {
+        grid-template-columns: 1fr;
+    }
+
+    .floating-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-love {
+        grid-column: auto;
+    }
+
     .hero-title {
-        font-size: 3rem;
+        max-width: 12ch;
     }
 
     .roadmap-banner {
@@ -814,7 +1164,7 @@ a {
     }
 
     .hero-title {
-        font-size: 2.4rem;
+        font-size: 2.7rem;
     }
 
     .feature-panel,
@@ -835,6 +1185,14 @@ a {
 
     .search-shell {
         padding: 1.25rem;
+    }
+
+    .hero-visual {
+        min-height: auto;
+    }
+
+    .music-note {
+        opacity: 0.6;
     }
 
     .hero-metrics,
