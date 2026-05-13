@@ -66,3 +66,12 @@ def test_semantic_search_respects_filters():
 	results = semantic_search("healing and reflection", filters={"genre": "R&B"}, top_k=5)
 	assert results
 	assert all("R&B" in result["genre"] for result in results)
+
+
+def test_semantic_search_uses_lyric_moment_and_lens_language():
+	initialize_vector_db(backend="memory")
+	build_vector_collection(songs=load_songs(), backend="memory")
+
+	results = semantic_search("lonely at the top pressure of success", top_k=5)
+	assert results
+	assert results[0]["title"] == "Lonely At The Top"

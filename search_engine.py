@@ -46,18 +46,25 @@ def get_match_label(score: int) -> str:
 
 
 def build_match_explanation(result: dict, query_keywords: list[str]) -> str:
+	lyric_fields = " ".join([result.get("lyric_moment", ""), result.get("lyric_lens", "")]).lower()
 	matched_terms = []
 	for keyword in query_keywords:
+		if keyword in lyric_fields:
+			matched_terms.append(keyword)
+			continue
 		if keyword in result.get("prepared_text", ""):
 			matched_terms.append(keyword)
 
 	if matched_terms:
 		preview = ", ".join(matched_terms[:3])
-		return f"Semantic match reinforced by prepared text overlap with {preview}."
+		return f"Lyric Lens picked up emotional overlap around {preview} in the lyric moment and interpretation."
+
+	if result.get("lyric_lens"):
+		return result["lyric_lens"]
 
 	theme_preview = ", ".join(result.get("themes", [])[:2])
 	mood_preview = ", ".join(result.get("moods", [])[:2])
-	return f"Semantic match driven by the song's themes ({theme_preview}) and moods ({mood_preview})."
+	return f"This song resonates through themes like {theme_preview} and moods such as {mood_preview}."
 
 
 def _is_direct_mood_browse(normalized_query: str, filters: dict) -> bool:

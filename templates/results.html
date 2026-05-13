@@ -7,12 +7,13 @@
     <div class="container py-5">
         <div class="section-heading narrow">
             <span class="eyebrow">Search Results</span>
-            <h1>Songs connected to your mood, meaning, and theme search</h1>
-            <p>{% if query %}Showing semantic matches for <strong>{{ query }}</strong>.{% else %}Enter a mood, theme, or idea from the search page to run the vector search flow.{% endif %}</p>
+            <h1>Song meanings, moods, and lyric moments that fit your search</h1>
+            <p>{% if query %}Showing lyric-centered matches for <strong>{{ query }}</strong>.{% else %}Browsing the full LyricLens song library{% if filters.genre or filters.mood or filters.era or filters.artist %} with your selected filters applied{% endif %}.{% endif %}</p>
         </div>
 
         <div class="results-toolbar mt-4">
             <div class="toolbar-pill">Query: {{ query or 'All songs' }}</div>
+            <div class="toolbar-pill">Showing: {{ results|length }} of {{ total_results }}</div>
             {% if filters.genre %}<div class="toolbar-pill">Genre: {{ filters.genre }}</div>{% endif %}
             {% if filters.mood %}<div class="toolbar-pill">Mood: {{ filters.mood }}</div>{% endif %}
             {% if filters.era %}<div class="toolbar-pill">Era: {{ filters.era }}</div>{% endif %}
@@ -23,32 +24,39 @@
         <div class="row g-4 mt-1">
             {% for result in results %}
             <div class="col-lg-6">
-                <article class="glass-card result-card h-100">
-                    <div class="d-flex flex-wrap justify-content-between gap-3 align-items-start">
-                        <div>
+                <article class="glass-card result-card result-experience-card h-100">
+                    <div class="result-top-row">
+                        <div class="song-artwork result-artwork" style="{{ result.artwork_style }}">
+                            <span>{{ result.artwork_initials }}</span>
+                        </div>
+                        <div class="result-top-copy">
                             <p class="card-kicker mb-2">{{ result.genre }} · {{ result.era }}</p>
                             <h2>{{ result.title }}</h2>
                             <p class="card-meta">{{ result.artist }}</p>
                         </div>
                     </div>
-                    <p class="mt-3 mb-3">{{ result.summary }}</p>
-                    <p class="result-note">{{ result.explanation }}</p>
-                    <div class="tag-row mb-4">
-                        {% for theme in result.themes %}
-                        <span class="theme-tag">{{ theme }}</span>
-                        {% endfor %}
+                    <div class="tag-row mt-4 mb-3">
                         {% for mood in result.moods %}
                         <span class="mood-tag">{{ mood }}</span>
                         {% endfor %}
+                        {% for theme in result.themes %}
+                        <span class="theme-tag">{{ theme }}</span>
+                        {% endfor %}
                     </div>
-                    <div class="action-row">
-                        <a class="btn btn-outline-light" href="{{ url_for('song_detail', song_id=result.id) }}">View details</a>
+                    <div class="lyric-moment-card">
+                        <span class="lyric-quote-mark">“</span>
+                        <blockquote>{{ result.lyric_moment }}</blockquote>
+                    </div>
+                    <div class="lyric-lens-panel mt-3">
+                        <span class="eyebrow small">LyricLens Interpretation</span>
+                        <p>{{ result.lyric_lens }}</p>
+                        <p class="result-note">{{ result.explanation }}</p>
+                    </div>
+                    <div class="action-row mt-4">
                         {% if result.spotify_track_url %}
-                        <a class="btn btn-spotify" href="{{ result.spotify_track_url }}" target="_blank" rel="noopener noreferrer">Open in Spotify</a>
+                        <a class="btn btn-spotify" href="{{ result.spotify_track_url }}" target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
                         {% endif %}
-                        {% if result.spotify_artist_url %}
-                        <a class="btn btn-outline-light" href="{{ result.spotify_artist_url }}" target="_blank" rel="noopener noreferrer">Artist page</a>
-                        {% endif %}
+                        <a class="btn btn-outline-light" href="{{ url_for('song_detail', song_id=result.id) }}">Explore Similar Songs</a>
                     </div>
                 </article>
             </div>
@@ -56,16 +64,19 @@
         </div>
         {% else %}
         <div class="glass-card mt-4 empty-state">
-            <h2>No semantic matches found</h2>
+            <h2>No songs matched those filters</h2>
             <p>Try broader wording or remove one of the filters to widen the emotional and thematic search space.</p>
             <a class="btn btn-outline-light mt-2" href="{{ url_for('search') }}">Back to Search</a>
         </div>
         {% endif %}
 
-        <div class="glass-card mt-4 notice-card">
-            <h2>How LyricLens finds related songs</h2>
-            <p>Each result is prepared with the NLP pipeline, embedded with the shared model interface, and compared through the vector search layer so users can discover songs by mood, meaning, and theme.</p>
+        {% if total_pages > 1 %}
+        <div class="d-flex justify-content-center gap-2 mt-4 flex-wrap">
+            {% for page_number in range(1, total_pages + 1) %}
+            <a class="btn {% if page_number == current_page %}btn-glow{% else %}btn-outline-light{% endif %}" href="{{ url_for('results', q=query, genre=filters.genre, mood=filters.mood, era=filters.era, artist=filters.artist, page=page_number) }}">{{ page_number }}</a>
+            {% endfor %}
         </div>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

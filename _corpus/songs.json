@@ -7,7 +7,9 @@
     "spotify_track_url": "https://open.spotify.com/track/55CHeLEfn5iJ0IIkgaa4si",
     "spotify_artist_url": "https://open.spotify.com/artist/181bsRPaVXVlUKXrxwZfHK",
     "themes": ["confidence", "empowerment", "self-expression"],
-    "moods": ["bold", "energetic", "assertive"]
+    "moods": ["bold", "energetic", "assertive"],
+    "lyric_moment": "“I'm a savage — classy, bougie, ratchet.”",
+    "lyric_lens": "This moment captures unapologetic confidence, individuality, and personal power while embracing multiple sides of identity at once."
   },
   {
     "title": "Her",
@@ -17,7 +19,9 @@
     "spotify_track_url": "https://open.spotify.com/track/26autw8NAPd99QRh6KFgdl",
     "spotify_artist_url": "https://open.spotify.com/artist/181bsRPaVXVlUKXrxwZfHK",
     "themes": ["identity", "confidence", "fame"],
-    "moods": ["powerful", "stylish", "confident"]
+    "moods": ["powerful", "stylish", "confident"],
+    "lyric_moment": "“Tell your friends, 'this her.’”",
+    "lyric_lens": "This moment represents self-assurance, visibility, and owning personal success without seeking outside validation."
   },
   {
     "title": "Sativa",
@@ -27,7 +31,9 @@
     "spotify_track_url": "https://open.spotify.com/track/5oKxax66OjT1ZD8UTCy61h",
     "spotify_artist_url": "https://open.spotify.com/artist/5ZS223C6JyBfXasXxrRqOk",
     "themes": ["healing", "vulnerability", "reflection"],
-    "moods": ["calm", "dreamy", "emotional"]
+    "moods": ["calm", "dreamy", "emotional"],
+    "lyric_moment": "“It's me and you and we makin' arrangements.”",
+    "lyric_lens": "This moment reflects emotional closeness, chemistry, and the relaxed intimacy that defines the song's atmosphere."
   },
   {
     "title": "my mine",
@@ -37,7 +43,9 @@
     "spotify_track_url": "https://open.spotify.com/track/2B8Y5LaNSEkuB3LA9okArd",
     "spotify_artist_url": "https://open.spotify.com/artist/5ZS223C6JyBfXasXxrRqOk",
     "themes": ["love", "peace", "self-reflection"],
-    "moods": ["soft", "dreamy", "intimate"]
+    "moods": ["soft", "dreamy", "intimate"],
+    "lyric_moment": "“I'll be okay once you get out my mind.”",
+    "lyric_lens": "This moment reflects emotional attachment and the struggle to move on from someone whose memories still linger deeply."
   },
   {
     "title": "Snooze",
@@ -47,7 +55,9 @@
     "spotify_track_url": "https://open.spotify.com/track/4iZ4pt7kvcaH6Yo8UoZ4s2",
     "spotify_artist_url": "https://open.spotify.com/artist/7tYKF4w9nC0nq9CsPZTHyP",
     "themes": ["love", "devotion", "relationships"],
-    "moods": ["warm", "emotional", "romantic"]
+    "moods": ["warm", "emotional", "romantic"],
+    "lyric_moment": "“How can I snooze and miss the moment?”",
+    "lyric_lens": "This moment reflects emotional presence and the fear of missing meaningful experiences with someone deeply important."
   },
   {
     "title": "Good Days",
@@ -57,7 +67,9 @@
     "spotify_track_url": "https://open.spotify.com/track/3YJJjQPAbDT7mGpX3WtQ9A",
     "spotify_artist_url": "https://open.spotify.com/artist/7tYKF4w9nC0nq9CsPZTHyP",
     "themes": ["healing", "growth", "peace"],
-    "moods": ["reflective", "calm", "hopeful"]
+    "moods": ["reflective", "calm", "hopeful"],
+    "lyric_moment": "“Still wanna try, still believe in good days.”",
+    "lyric_lens": "This moment reflects emotional resilience and the decision to hold onto hope even while struggling internally."
   },
   {
     "title": "Easy On Me",
@@ -67,7 +79,9 @@
     "spotify_track_url": "https://open.spotify.com/track/0gplL1WMoJ6iYaPgMCL0gX",
     "spotify_artist_url": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY",
     "themes": ["heartbreak", "change", "reflection"],
-    "moods": ["emotional", "melancholic", "mature"]
+    "moods": ["emotional", "melancholic", "mature"],
+    "lyric_moment": "“I was still a child.”",
+    "lyric_lens": "This moment reflects emotional vulnerability and the realization that personal choices were made before fully understanding the world and oneself."
   },
   {
     "title": "Someone Like You",
@@ -77,7 +91,9 @@
     "spotify_track_url": "https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB",
     "spotify_artist_url": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY",
     "themes": ["loss", "heartbreak", "acceptance"],
-    "moods": ["sad", "nostalgic", "emotional"]
+    "moods": ["sad", "nostalgic", "emotional"],
+    "lyric_moment": "“Sometimes it lasts in love, but sometimes it hurts instead.”",
+    "lyric_lens": "This moment reflects the bittersweet reality that love can leave lasting emotional pain even when memories and feelings remain meaningful."
   },
   {
     "title": "Calm Down",
@@ -87,7 +103,9 @@
     "spotify_track_url": "https://open.spotify.com/track/0WtM2NBVQNNJLh6scP13H8",
     "spotify_artist_url": "https://open.spotify.com/artist/46pWGuE3dSwY3bMMXGBvVS",
     "themes": ["romance", "youth", "connection"],
-    "moods": ["smooth", "vibrant", "playful"]
+    "moods": ["smooth", "vibrant", "playful"],
+    "lyric_moment": "“Girl, this your body e put my heart for lockdown.”",
+    "lyric_lens": "This moment reflects emotional attraction and the overwhelming excitement of being deeply drawn to someone."
   },
   {
     "title": "Charm",
@@ -97,7 +115,9 @@
     "spotify_track_url": "https://open.spotify.com/track/1Qrg8KqiBpW07V7PNxwwwL",
     "spotify_artist_url": "https://open.spotify.com/artist/46pWGuE3dSwY3bMMXGBvVS",
     "themes": ["confidence", "attraction", "celebration"],
-    "moods": ["upbeat", "smooth", "confident"]
+    "moods": ["upbeat", "smooth", "confident"],
+    "lyric_moment": "“You better drop your body armor.”",
+    "lyric_lens": "This moment reflects emotional openness and the desire to break through someone's guarded exterior to create a genuine connection."
   },
   {
     "title": "Lonely At The Top",
@@ -107,7 +127,9 @@
     "spotify_track_url": "https://open.spotify.com/track/0VXuCcriWRGvwMV1r5Yn9x",
     "spotify_artist_url": "https://open.spotify.com/artist/3a1tBryiczPAZpgoZN9Rzg",
     "themes": ["success", "pressure", "ambition"],
-    "moods": ["reflective", "motivational", "emotional"]
+    "moods": ["reflective", "motivational", "emotional"],
+    "lyric_moment": "“It's lonely at the top.”",
+    "lyric_lens": "This moment reflects the emotional isolation that can come with chasing success and pursuing personal ambition."
   },
   {
     "title": "Amapiano",
@@ -117,7 +139,9 @@
     "spotify_track_url": "https://open.spotify.com/track/6n6GJ6xYh4S2Y3VjA6z0G6",
     "spotify_artist_url": "https://open.spotify.com/artist/3a1tBryiczPAZpgoZN9Rzg",
     "themes": ["celebration", "energy", "freedom"],
-    "moods": ["upbeat", "party", "vibrant"]
+    "moods": ["upbeat", "party", "vibrant"],
+    "lyric_moment": "“It's a big vibe.”",
+    "lyric_lens": "This moment reflects celebration, confidence, and the high-energy atmosphere of enjoying success, music, and nightlife."
   },
   {
     "title": "Unavailable",
@@ -127,7 +151,9 @@
     "spotify_track_url": "https://open.spotify.com/track/1vYXt7VSjH9JIM5oRRo7vA",
     "spotify_artist_url": "https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh",
     "themes": ["confidence", "freedom", "celebration"],
-    "moods": ["energetic", "upbeat", "playful"]
+    "moods": ["energetic", "upbeat", "playful"],
+    "lyric_moment": "“I'm unavailable.”",
+    "lyric_lens": "This moment reflects emotional distance and the mindset of prioritizing personal success and peace over outside expectations and drama."
   },
   {
     "title": "Feel",
@@ -137,7 +163,9 @@
     "spotify_track_url": "https://open.spotify.com/track/4ybKrw4V9Mowon3LunlNB4",
     "spotify_artist_url": "https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh",
     "themes": ["love", "joy", "romance"],
-    "moods": ["warm", "smooth", "uplifting"]
+    "moods": ["warm", "smooth", "uplifting"],
+    "lyric_moment": "“I no wan sleep alone, wanna hold you tight.”",
+    "lyric_lens": "This moment reflects emotional vulnerability and the desire for closeness, comfort, and connection with someone important."
   },
   {
     "title": "Black Swan",
@@ -147,7 +175,9 @@
     "spotify_track_url": "https://open.spotify.com/track/2EmcTFQ1rM11wp2ztsXTHa",
     "spotify_artist_url": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX",
     "themes": ["identity", "pressure", "artistry"],
-    "moods": ["dramatic", "intense", "reflective"]
+    "moods": ["dramatic", "intense", "reflective"],
+    "lyric_moment": "“What if that moment's right now?”",
+    "lyric_lens": "This moment reflects the fear of losing passion and purpose while questioning one's connection to art, identity, and self-expression."
   },
   {
     "title": "Dynamite",
@@ -157,7 +187,9 @@
     "spotify_track_url": "https://open.spotify.com/track/0t1kP63rueHleOhQkYSXFY",
     "spotify_artist_url": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX",
     "themes": ["joy", "celebration", "positivity"],
-    "moods": ["bright", "upbeat", "happy"]
+    "moods": ["bright", "upbeat", "happy"],
+    "lyric_moment": "“Light it up like dynamite.”",
+    "lyric_lens": "This moment reflects excitement, confidence, and the desire to bring energy and positivity into every moment."
   },
   {
     "title": "PILLOWTALK",
@@ -167,7 +199,9 @@
     "spotify_track_url": "https://open.spotify.com/track/0PDUDa38GO8lMxLCRc4lL1",
     "spotify_artist_url": "https://open.spotify.com/artist/5ZsFI1h6hIdQRw2ti0hz81",
     "themes": ["love", "intimacy", "desire"],
-    "moods": ["sensual", "dark", "emotional"]
+    "moods": ["sensual", "dark", "emotional"],
+    "lyric_moment": "“It's our paradise and it's our war zone.”",
+    "lyric_lens": "This moment reflects the emotional complexity of love and intimacy, where comfort and conflict can exist at the same time."
   },
   {
     "title": "Dusk Till Dawn",
@@ -177,7 +211,9 @@
     "spotify_track_url": "https://open.spotify.com/track/1j4kHkkpqZRBwE0A4CN4Yv",
     "spotify_artist_url": "https://open.spotify.com/artist/5ZsFI1h6hIdQRw2ti0hz81",
     "themes": ["loyalty", "love", "commitment"],
-    "moods": ["cinematic", "emotional", "hopeful"]
+    "moods": ["cinematic", "emotional", "hopeful"],
+    "lyric_moment": "“You'll never be alone.”",
+    "lyric_lens": "This moment reflects emotional reassurance and the promise of staying beside someone through difficult moments and uncertainty."
   },
   {
     "title": "Billie Jean",
@@ -187,7 +223,9 @@
     "spotify_track_url": "https://open.spotify.com/track/5ChkMS8OtdzJeqyybCc9R5",
     "spotify_artist_url": "https://open.spotify.com/artist/3fMbdgg4jU18AjLCKBhRSm",
     "themes": ["fame", "trust", "pressure"],
-    "moods": ["groovy", "tense", "iconic"]
+    "moods": ["groovy", "tense", "iconic"],
+    "lyric_moment": "“The lie becomes the truth.”",
+    "lyric_lens": "This moment reflects the emotional pressure of rumors, public scrutiny, and the blurred line between perception and reality."
   },
   {
     "title": "Man in the Mirror",
@@ -197,6 +235,8 @@
     "spotify_track_url": "https://open.spotify.com/track/7EsjkelQuoUlJXEw7SeVV4",
     "spotify_artist_url": "https://open.spotify.com/artist/3fMbdgg4jU18AjLCKBhRSm",
     "themes": ["reflection", "change", "social awareness"],
-    "moods": ["inspirational", "emotional", "uplifting"]
+    "moods": ["inspirational", "emotional", "uplifting"],
+    "lyric_moment": "“Take a look at yourself and then make a change.”",
+    "lyric_lens": "This moment reflects personal accountability and the belief that meaningful change in the world begins with self-reflection and action."
   }
 ]

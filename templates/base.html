@@ -24,6 +24,10 @@
             <span class="music-note note-6">♪</span>
             <span class="music-note note-7">𝄞</span>
             <span class="music-note note-8">♬</span>
+            <span class="music-note note-9">♪</span>
+            <span class="music-note note-10">♫</span>
+            <span class="music-note note-11">♩</span>
+            <span class="music-note note-12">𝄞</span>
         </div>
         <header class="site-header">
             <nav class="navbar navbar-expand-lg navbar-dark">
@@ -35,9 +39,8 @@
                     <div class="collapse navbar-collapse" id="primaryNav">
                         <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('search') }}">Search</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
                             <li class="nav-item ms-lg-2"><a class="btn btn-glow" href="{{ url_for('search') }}">Try Search</a></li>
                         </ul>
                     </div>
@@ -60,5 +63,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script>
+        (() => {
+            const warmVectorStore = () => {
+                fetch("{{ url_for('warmup') }}", {
+                    method: "POST",
+                    keepalive: true,
+                    headers: { "X-Requested-With": "lyriclens-warmup" },
+                }).catch(() => {});
+            };
+
+            if ("requestIdleCallback" in window) {
+                window.requestIdleCallback(warmVectorStore, { timeout: 1200 });
+                return;
+            }
+
+            window.setTimeout(warmVectorStore, 450);
+        })();
+    </script>
 </body>
 </html>

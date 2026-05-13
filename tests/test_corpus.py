@@ -16,7 +16,7 @@ def test_each_song_has_required_fields():
 def test_every_song_has_required_spotify_and_metadata_fields():
     songs = load_songs()
     for song in songs:
-        for key in ["title", "artist", "genre", "era", "spotify_track_url", "spotify_artist_url"]:
+        for key in ["title", "artist", "genre", "era", "spotify_track_url", "spotify_artist_url", "lyric_moment", "lyric_lens"]:
             assert song[key].strip()
         assert song["themes"]
         assert song["moods"]
@@ -33,6 +33,12 @@ def test_no_song_has_missing_id_title_or_artist():
 def test_search_text_exists_for_every_song():
     songs = load_songs()
     assert all(song["search_text"].strip() for song in songs)
+
+
+def test_search_text_prioritizes_lyric_fields():
+    song = load_songs()[0]
+    assert song["lyric_moment"] in song["search_text"]
+    assert song["lyric_lens"] in song["search_text"]
 
 
 def test_no_full_lyrics_are_included():

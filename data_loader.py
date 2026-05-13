@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -14,6 +15,8 @@ REQUIRED_SONG_FIELDS = {
 	"era",
 	"themes",
 	"moods",
+	"lyric_moment",
+	"lyric_lens",
 	"summary",
 	"safe_excerpt",
 	"search_text",
@@ -28,6 +31,8 @@ RAW_REQUIRED_SONG_FIELDS = {
 	"spotify_artist_url",
 	"themes",
 	"moods",
+	"lyric_moment",
+	"lyric_lens",
 }
 
 
@@ -35,6 +40,7 @@ def get_corpus_path() -> Path:
 	return Path(__file__).resolve().parent / "_corpus" / "songs.json"
 
 
+@lru_cache(maxsize=4)
 def load_songs(file_path: str | Path | None = None) -> list[dict]:
 	corpus_path = Path(file_path) if file_path else get_corpus_path()
 
@@ -60,7 +66,7 @@ def validate_raw_song_collection(songs: list[dict]) -> None:
 			missing_list = ", ".join(sorted(missing_fields))
 			raise ValueError(f"Raw song record is missing required fields: {missing_list}")
 
-		for key in ["title", "artist", "genre", "era", "spotify_track_url", "spotify_artist_url"]:
+		for key in ["title", "artist", "genre", "era", "spotify_track_url", "spotify_artist_url", "lyric_moment", "lyric_lens"]:
 			if not isinstance(song[key], str) or not song[key].strip():
 				raise ValueError(f"Raw song field '{key}' must be a non-empty string.")
 
@@ -76,9 +82,21 @@ def normalize_song_collection(raw_songs: list[dict]) -> list[dict]:
 	for index, song in enumerate(raw_songs, start=1):
 		themes = [theme.strip() for theme in song["themes"] if isinstance(theme, str) and theme.strip()]
 		moods = [mood.strip() for mood in song["moods"] if isinstance(mood, str) and mood.strip()]
+		lyric_moment = song["lyric_moment"].strip()
+		lyric_lens = song["lyric_lens"].strip()
 		summary = song.get("summary") or build_summary(song["title"], song["artist"], song["genre"], song["era"], themes, moods)
-		safe_excerpt = song.get("safe_excerpt", "")
-		search_text = song.get("search_text") or build_search_text(song["title"], song["artist"], song["genre"], song["era"], themes, moods, summary)
+		safe_excerpt = (song.get("safe_excerpt") or lyric_moment).strip()
+		search_text = song.get("search_text") or build_search_text(
+			song["title"],
+			song["artist"],
+			song["genre"],
+			song["era"],
+			themes,
+			moods,
+			lyric_moment,
+			lyric_lens,
+			summary,
+		)
 
 		normalized_songs.append(
 			{
@@ -91,6 +109,8 @@ def normalize_song_collection(raw_songs: list[dict]) -> list[dict]:
 				"spotify_artist_url": song["spotify_artist_url"].strip(),
 				"themes": themes,
 				"moods": moods,
+				"lyric_moment": lyric_moment,
+				"lyric_lens": lyric_lens,
 				"summary": summary,
 				"safe_excerpt": safe_excerpt.strip(),
 				"search_text": search_text,
@@ -106,8 +126,28 @@ def build_summary(title: str, artist: str, genre: str, era: str, themes: list[st
 	return f"{title} by {artist} is a {genre} track from the {era} centered on {theme_text} with a {mood_text} emotional profile."
 
 
-def build_search_text(title: str, artist: str, genre: str, era: str, themes: list[str], moods: list[str], summary: str) -> str:
-	segments = [title, artist, genre, era, " ".join(themes), " ".join(moods), summary]
+def build_search_text(
+	title: str,
+	artist: str,
+	genre: str,
+	era: str,
+	themes: list[str],
+	moods: list[str],
+	lyric_moment: str,
+	lyric_lens: str,
+	summary: str,
+) -> str:
+	segments = [
+		lyric_moment,
+		lyric_lens,
+		" ".join(themes),
+		" ".join(moods),
+		title,
+		artist,
+		genre,
+		era,
+		summary,
+	]
 	return " ".join(segment.strip() for segment in segments if segment and segment.strip())
 
 
@@ -137,7 +177,7 @@ def validate_song(song: dict) -> None:
 	if not isinstance(song["id"], int):
 		raise ValueError("Song id must be an integer.")
 
-	for key in ["title", "artist", "genre", "era", "summary", "search_text", "spotify_track_url", "spotify_artist_url"]:
+	for key in ["title", "artist", "genre", "era", "summary", "search_text", "spotify_track_url", "spotify_artist_url", "lyric_moment", "lyric_lens"]:
 		if not isinstance(song[key], str) or not song[key].strip():
 			raise ValueError(f"Song field '{key}' must be a non-empty string.")
 

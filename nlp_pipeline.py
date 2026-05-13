@@ -115,10 +115,16 @@ def extract_keywords(text: str, limit: int = 8) -> list[str]:
 def prepare_song_text(song: dict, include_keywords: bool = True) -> str:
 	"""Combine the structured corpus fields into the main searchable text."""
 	segments = [
+		song.get("lyric_moment", ""),
+		song.get("lyric_lens", ""),
+		song.get("lyric_moment", ""),
+		song.get("lyric_lens", ""),
 		song.get("title", ""),
 		song.get("artist", ""),
 		song.get("genre", ""),
 		song.get("era", ""),
+		" ".join(song.get("themes", [])),
+		" ".join(song.get("moods", [])),
 		" ".join(song.get("themes", [])),
 		" ".join(song.get("moods", [])),
 		song.get("summary", ""),

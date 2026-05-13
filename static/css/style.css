@@ -52,86 +52,125 @@ a {
 
 .music-note {
     position: absolute;
-    color: rgba(255, 255, 255, 0.16);
-    text-shadow: 0 0 22px currentColor;
-    filter: blur(0.15px);
-    animation: note-drift 18s linear infinite, note-pulse 6s ease-in-out infinite;
+    color: rgba(255, 255, 255, 0.26);
+    font-weight: 700;
+    text-shadow: 0 0 28px currentColor, 0 0 46px currentColor;
+    filter: drop-shadow(0 0 16px currentColor);
+    animation: note-drift 11s linear infinite, note-pulse 4.2s ease-in-out infinite;
 }
 
 .note-1,
 .note-6 {
-    color: rgba(34, 211, 238, 0.18);
+    color: rgba(34, 211, 238, 0.32);
 }
 
 .note-2,
 .note-5 {
-    color: rgba(236, 72, 153, 0.18);
+    color: rgba(236, 72, 153, 0.34);
 }
 
 .note-3,
 .note-7 {
-    color: rgba(139, 92, 246, 0.18);
+    color: rgba(139, 92, 246, 0.32);
 }
 
 .note-4,
-.note-8 {
-    color: rgba(245, 158, 11, 0.16);
+.note-8,
+.note-11 {
+    color: rgba(245, 158, 11, 0.28);
+}
+
+.note-9,
+.note-12 {
+    color: rgba(94, 234, 212, 0.3);
+}
+
+.note-10 {
+    color: rgba(244, 114, 182, 0.32);
 }
 
 .note-1 {
     left: 4%;
     top: 72%;
-    font-size: 2.1rem;
+    font-size: 2.5rem;
     animation-delay: -2s;
 }
 
 .note-2 {
     left: 14%;
     top: 18%;
-    font-size: 1.7rem;
+    font-size: 2rem;
     animation-delay: -7s;
 }
 
 .note-3 {
     left: 83%;
     top: 12%;
-    font-size: 2.4rem;
+    font-size: 2.8rem;
     animation-delay: -4s;
 }
 
 .note-4 {
     left: 92%;
     top: 58%;
-    font-size: 1.8rem;
+    font-size: 2.1rem;
     animation-delay: -11s;
 }
 
 .note-5 {
     left: 64%;
     top: 76%;
-    font-size: 2rem;
+    font-size: 2.35rem;
     animation-delay: -8s;
 }
 
 .note-6 {
     left: 47%;
     top: 8%;
-    font-size: 1.5rem;
+    font-size: 1.85rem;
     animation-delay: -13s;
 }
 
 .note-7 {
     left: 26%;
     top: 48%;
-    font-size: 2.2rem;
+    font-size: 2.6rem;
     animation-delay: -5s;
 }
 
 .note-8 {
     left: 74%;
     top: 36%;
-    font-size: 1.65rem;
+    font-size: 1.95rem;
     animation-delay: -10s;
+}
+
+.note-9 {
+    left: 8%;
+    top: 32%;
+    font-size: 2.15rem;
+    animation-delay: -3.6s;
+}
+
+.note-10 {
+    left: 58%;
+    top: 20%;
+    font-size: 2.45rem;
+    animation-delay: -6.8s;
+}
+
+.note-11 {
+    left: 88%;
+    top: 80%;
+    font-size: 2.05rem;
+    animation-delay: -1.8s;
+}
+
+.note-12 {
+    left: 34%;
+    top: 64%;
+    font-size: 2.3rem;
+    animation-delay: -8.7s;
 }
 
 .aurora {
@@ -357,9 +396,98 @@ a {
     z-index: 1;
 }
 
-.hero-wave-bars {
-    height: 4.25rem;
-    margin: 0.85rem 0 0;
+.hero-waveflow {
+    position: relative;
+    height: 7.2rem;
+    margin: 0.9rem 0 0.35rem;
+    overflow: hidden;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at 20% 50%, rgba(34, 211, 238, 0.18), transparent 24%),
+        radial-gradient(circle at 72% 48%, rgba(236, 72, 153, 0.2), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+}
+
+.hero-waveflow::after {
+    content: "";
+    position: absolute;
+    left: 4%;
+    right: 4%;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0), rgba(34, 211, 238, 0.65) 24%, rgba(236, 72, 153, 0.8) 50%, rgba(34, 211, 238, 0.65) 76%, rgba(34, 211, 238, 0));
+    opacity: 0.7;
+    filter: blur(0.6px);
+}
+
+.hero-waveflow-glow {
+    position: absolute;
+    inset: 32% 10% 32% 10%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.28), rgba(139, 92, 246, 0.22), rgba(236, 72, 153, 0.28));
+    filter: blur(18px);
+    opacity: 0.9;
+}
+
+.wave-line {
+    position: absolute;
+    inset: 0;
+    width: 120%;
+    height: 100%;
+    overflow: visible;
+    transform-origin: center;
+}
+
+.wave-line path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-width: 3.2;
+}
+
+.wave-line-1 {
+    left: -8%;
+    animation: waveflow-drift 8.5s ease-in-out infinite;
+}
+
+.wave-line-1 path {
+    stroke: rgba(94, 234, 212, 0.88);
+    filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.85));
+}
+
+.wave-line-2 {
+    left: -6%;
+    animation: waveflow-drift-reverse 6.9s ease-in-out infinite;
+}
+
+.wave-line-2 path {
+    stroke: rgba(167, 139, 250, 0.76);
+    stroke-width: 2.6;
+    filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.72));
+}
+
+.wave-line-3 {
+    left: -10%;
+    animation: waveflow-drift 7.6s ease-in-out infinite;
+    animation-delay: -1.8s;
+}
+
+.wave-line-3 path {
+    stroke: rgba(244, 114, 182, 0.78);
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 12px rgba(236, 72, 153, 0.72));
+}
+
+.wave-line-4 {
+    left: -7%;
+    animation: waveflow-drift-reverse 9.2s ease-in-out infinite;
+    animation-delay: -2.4s;
+}
+
+.wave-line-4 path {
+    stroke: rgba(96, 165, 250, 0.66);
+    stroke-width: 2.1;
+    filter: drop-shadow(0 0 9px rgba(96, 165, 250, 0.62));
 }
 
 .floating-card-grid {
@@ -437,6 +565,10 @@ a {
     display: flex;
     flex-direction: column;
     color: var(--text-primary);
+}
+
+.mood-journey-card {
+    text-decoration: none;
 }
 
 .mood-journey-card h3,
@@ -541,34 +673,6 @@ a {
 .filter-label {
     color: var(--text-secondary);
 }
-
-.waveform-panel {
-    overflow: hidden;
-}
-
-.wave-bars {
-    display: flex;
-    align-items: end;
-    gap: 0.45rem;
-    height: 6rem;
-    margin: 1rem 0 1.5rem;
-}
-
-.wave-bars span {
-    flex: 1;
-    border-radius: 999px;
-    background: linear-gradient(180deg, rgba(34, 211, 238, 0.9), rgba(236, 72, 153, 0.45));
-    animation: wave-pulse 1.9s ease-in-out infinite;
-}
-
-.wave-bars span:nth-child(1) { height: 34%; }
-.wave-bars span:nth-child(2) { height: 74%; animation-delay: 0.2s; }
-.wave-bars span:nth-child(3) { height: 52%; animation-delay: 0.4s; }
-.wave-bars span:nth-child(4) { height: 88%; animation-delay: 0.6s; }
-.wave-bars span:nth-child(5) { height: 44%; animation-delay: 0.8s; }
-.wave-bars span:nth-child(6) { height: 70%; animation-delay: 1s; }
-.wave-bars span:nth-child(7) { height: 48%; animation-delay: 1.2s; }
-.wave-bars span:nth-child(8) { height: 80%; animation-delay: 1.4s; }
 
 .spotlight-card h3,
 .result-card h2,
@@ -1082,6 +1186,300 @@ a {
     color: var(--text-secondary);
 }
 
+.spotlight-lyric {
+    margin-bottom: 0;
+    color: rgba(248, 250, 252, 0.82);
+    font-style: italic;
+}
+
+.song-artwork {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 11rem;
+    border-radius: 22px;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 28% 24%, var(--artwork-start), transparent 28%),
+        radial-gradient(circle at 72% 28%, var(--artwork-accent), transparent 18%),
+        linear-gradient(160deg, rgba(8, 10, 18, 0.18), rgba(8, 10, 18, 0.68)),
+        linear-gradient(135deg, var(--artwork-start), var(--artwork-end));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 24px 52px var(--artwork-glow);
+}
+
+.song-artwork::before,
+.song-artwork::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    opacity: 0.72;
+}
+
+.song-artwork::before {
+    width: 72%;
+    height: 72%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.16), transparent 64%);
+    filter: blur(6px);
+}
+
+.song-artwork::after {
+    inset: auto 10% 12% 10%;
+    height: 18%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+    filter: blur(10px);
+}
+
+.song-artwork span {
+    position: relative;
+    z-index: 1;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.94);
+    text-shadow: 0 0 24px rgba(255, 255, 255, 0.2);
+}
+
+.song-artwork-small {
+    min-height: 7rem;
+}
+
+.song-artwork-small span {
+    font-size: 1.8rem;
+}
+
+.song-artwork-large {
+    min-height: 20rem;
+}
+
+.song-artwork-large span {
+    font-size: 4rem;
+}
+
+.hero-lyric-rotator {
+    position: relative;
+    min-height: 13.25rem;
+    max-width: 42rem;
+}
+
+.hero-lyric-card {
+    position: absolute;
+    inset: 0;
+    padding: 1.35rem 1.45rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(11, 16, 32, 0.82), rgba(26, 18, 42, 0.82));
+    box-shadow: 0 18px 40px rgba(139, 92, 246, 0.12);
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+}
+
+.hero-lyric-card.is-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.hero-lyric-card blockquote,
+.lyric-moment-card blockquote {
+    margin: 0;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.45;
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.hero-lyric-card p,
+.hero-lyric-card strong {
+    margin-top: 0.8rem;
+    display: block;
+}
+
+.hero-lyric-card strong {
+    color: rgba(248, 250, 252, 0.84);
+}
+
+.discovery-rails {
+    display: grid;
+    gap: 2rem;
+}
+
+.discovery-rail-title {
+    margin: 0;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.discovery-rail-scroll {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(17rem, 22rem);
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x proximity;
+}
+
+.discovery-rail-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.discovery-rail-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+}
+
+.discovery-rail-card {
+    min-height: 100%;
+    text-decoration: none;
+    color: var(--text-primary);
+    scroll-snap-align: start;
+}
+
+.discovery-rail-copy {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.discovery-rail-copy strong {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1.12rem;
+}
+
+.discovery-rail-copy span,
+.discovery-rail-copy p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.discovery-rail-copy p {
+    font-style: italic;
+    color: rgba(248, 250, 252, 0.84);
+}
+
+.result-experience-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.result-top-row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+}
+
+.result-artwork {
+    min-height: 9rem;
+}
+
+.result-top-copy h2 {
+    margin-bottom: 0.45rem;
+}
+
+.lyric-moment-card {
+    position: relative;
+    padding: 1.2rem 1.25rem 1.2rem 3.2rem;
+    border-radius: 20px;
+    border: 1px solid rgba(236, 72, 153, 0.22);
+    background: linear-gradient(180deg, rgba(46, 19, 56, 0.38), rgba(13, 19, 34, 0.72));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 16px 40px rgba(236, 72, 153, 0.08);
+}
+
+.lyric-quote-mark {
+    position: absolute;
+    left: 1rem;
+    top: 0.65rem;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 2.8rem;
+    line-height: 1;
+    color: rgba(236, 72, 153, 0.72);
+}
+
+.lyric-lens-panel {
+    padding: 1rem 1.1rem;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lyric-lens-panel p:last-child {
+    margin-bottom: 0;
+}
+
+.song-detail-section {
+    position: relative;
+}
+
+.song-detail-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 18% 24%, var(--artwork-glow), transparent 24%),
+        radial-gradient(circle at 82% 20%, var(--artwork-start), transparent 18%),
+        radial-gradient(circle at 68% 70%, var(--artwork-end), transparent 24%);
+    opacity: 0.26;
+    pointer-events: none;
+}
+
+.song-detail-shell {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(18rem, 0.9fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.song-detail-main,
+.song-detail-sidebar {
+    position: relative;
+    z-index: 1;
+}
+
+.song-detail-hero {
+    display: grid;
+    grid-template-columns: minmax(16rem, 20rem) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.song-detail-copy h1,
+.song-detail-sidebar h2 {
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.song-detail-quote blockquote {
+    font-size: 1.35rem;
+}
+
+.related-song-card {
+    display: grid;
+    grid-template-columns: 6.2rem minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+}
+
+.related-song-copy {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.related-song-copy p,
+.related-song-copy span {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.related-song-copy p {
+    font-style: italic;
+    color: rgba(248, 250, 252, 0.82);
+}
+
 .site-footer {
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     background: rgba(8, 10, 18, 0.65);
@@ -1091,15 +1489,27 @@ a {
     font-size: 0.95rem;
 }
 
-@keyframes wave-pulse {
+@keyframes waveflow-drift {
     0%,
     100% {
-        transform: scaleY(0.85);
-        opacity: 0.75;
+        transform: translateX(0) scaleY(0.92);
+        opacity: 0.7;
     }
     50% {
-        transform: scaleY(1.05);
+        transform: translateX(-2.5%) scaleY(1.08);
         opacity: 1;
+    }
+}
+
+@keyframes waveflow-drift-reverse {
+    0%,
+    100% {
+        transform: translateX(0) scaleY(0.96);
+        opacity: 0.66;
+    }
+    50% {
+        transform: translateX(2.8%) scaleY(1.12);
+        opacity: 0.96;
     }
 }
 
@@ -1118,26 +1528,32 @@ a {
         transform: translate3d(0, 0, 0);
     }
     50% {
-        transform: translate3d(18px, -18px, 0);
+        transform: translate3d(24px, -26px, 0);
     }
     100% {
-        transform: translate3d(-8px, -42px, 0);
+        transform: translate3d(-12px, -68px, 0);
     }
 }
 
 @keyframes note-pulse {
     0%,
     100% {
-        opacity: 0.18;
+        opacity: 0.34;
     }
     50% {
-        opacity: 0.34;
+        opacity: 0.62;
     }
 }
 
 @media (max-width: 991.98px) {
     .hero-shell,
     .homepage-cta {
+        grid-template-columns: 1fr;
+    }
+
+    .song-detail-shell,
+    .song-detail-hero,
+    .result-top-row {
         grid-template-columns: 1fr;
     }
 
@@ -1191,8 +1607,16 @@ a {
         min-height: auto;
     }
 
+    .hero-lyric-rotator {
+        min-height: 16rem;
+    }
+
+    .discovery-rail-scroll {
+        grid-auto-columns: minmax(15rem, 84vw);
+    }
+
     .music-note {
-        opacity: 0.6;
+        opacity: 0.82;
     }
 
     .hero-metrics,

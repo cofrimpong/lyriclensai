@@ -19,14 +19,36 @@
                     <a class="btn btn-outline-light btn-lg" href="{{ url_for('dashboard') }}">View Mood Dashboard</a>
                 </div>
                 <p class="hero-caption mt-4">Search by mood, memory, or emotion. Let your mood guide the search.</p>
+                <div class="hero-lyric-rotator mt-4" data-lyric-rotator>
+                    {% for lyric in rotating_lyrics %}
+                    <article class="hero-lyric-card {% if loop.first %}is-active{% endif %}" data-lyric-slide>
+                        <span class="eyebrow small">Lyric Lens Moment</span>
+                        <blockquote>{{ lyric.lyric_moment }}</blockquote>
+                        <p>{{ lyric.lyric_lens }}</p>
+                        <strong>{{ lyric.title }} · {{ lyric.artist }}</strong>
+                    </article>
+                    {% endfor %}
+                </div>
             </div>
             <div class="hero-visual-column">
                 <div class="hero-aura"></div>
                 <div class="hero-visual glass-card">
                     <div class="hero-visual-head">
                         <span class="panel-label">Live Discovery Mix</span>
-                        <div class="wave-bars hero-wave-bars" aria-hidden="true">
-                            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                        <div class="hero-waveflow" aria-hidden="true">
+                            <div class="hero-waveflow-glow"></div>
+                            <svg class="wave-line wave-line-1" viewBox="0 0 720 160" preserveAspectRatio="none">
+                                <path d="M0 82 C 32 82, 48 52, 80 52 S 128 108, 160 108 S 208 42, 240 42 S 288 118, 320 118 S 368 28, 400 28 S 448 102, 480 102 S 528 58, 560 58 S 608 94, 640 94 S 688 70, 720 70"></path>
+                            </svg>
+                            <svg class="wave-line wave-line-2" viewBox="0 0 720 160" preserveAspectRatio="none">
+                                <path d="M0 86 C 28 86, 46 62, 74 62 S 122 100, 150 100 S 198 48, 226 48 S 274 114, 302 114 S 350 34, 378 34 S 426 108, 454 108 S 502 52, 530 52 S 578 96, 606 96 S 654 66, 720 66"></path>
+                            </svg>
+                            <svg class="wave-line wave-line-3" viewBox="0 0 720 160" preserveAspectRatio="none">
+                                <path d="M0 90 C 36 90, 54 70, 90 70 S 144 104, 180 104 S 234 54, 270 54 S 324 124, 360 124 S 414 36, 450 36 S 504 106, 540 106 S 594 64, 630 64 S 684 84, 720 84"></path>
+                            </svg>
+                            <svg class="wave-line wave-line-4" viewBox="0 0 720 160" preserveAspectRatio="none">
+                                <path d="M0 78 C 24 78, 42 60, 66 60 S 114 96, 138 96 S 186 30, 210 30 S 258 120, 282 120 S 330 40, 354 40 S 402 110, 426 110 S 474 50, 498 50 S 546 92, 570 92 S 618 46, 642 46 S 690 88, 720 88"></path>
+                            </svg>
                         </div>
                     </div>
                     <div class="floating-card-grid">
@@ -60,10 +82,49 @@
 <section class="content-section">
     <div class="container py-5">
         <div class="section-heading narrow mb-4">
+            <span class="eyebrow">How It Works</span>
+            <h2>Simple discovery, built around what you feel like hearing</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">1</span>
+                    <h3>Describe a feeling</h3>
+                    <p>Type something like “songs about healing after heartbreak.”</p>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">2</span>
+                    <h3>Explore matching songs</h3>
+                    <p>LyricLens finds songs with similar moods, themes, and emotional patterns.</p>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <article class="glass-card h-100 info-card home-info-card">
+                    <span class="badge-soft">3</span>
+                    <h3>Open and listen</h3>
+                    <p>Use Spotify links to jump from discovery to listening without breaking the mood.</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container py-5">
+        <div class="section-heading narrow mb-4">
             <span class="eyebrow">Mood Paths</span>
             <h2>What are you in the mood for?</h2>
         </div>
         <div class="row g-4">
+            <div class="col-md-6 col-xl-4">
+                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='love intimacy') }}">
+                    <span class="badge-soft">Love &amp; Intimacy</span>
+                    <h3>Move through closeness, desire, softness, and emotional connection.</h3>
+                    <p>Search by mood, memory, or emotion when the feeling is personal and close.</p>
+                </a>
+            </div>
             <div class="col-md-6 col-xl-4">
                 <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='heartbreak healing') }}">
                     <span class="badge-soft">Heartbreak &amp; Healing</span>
@@ -83,13 +144,6 @@
                     <span class="badge-soft">Joy &amp; Celebration</span>
                     <h3>Pull up bright songs for freedom, movement, and nights that deserve a soundtrack.</h3>
                     <p>Let the search lean into joy, celebration, and high-energy release.</p>
-                </a>
-            </div>
-            <div class="col-md-6 col-xl-4">
-                <a class="glass-card mood-journey-card h-100" href="{{ url_for('search', q='love intimacy') }}">
-                    <span class="badge-soft">Love &amp; Intimacy</span>
-                    <h3>Move through closeness, desire, softness, and emotional connection.</h3>
-                    <p>Search by mood, memory, or emotion when the feeling is personal and close.</p>
                 </a>
             </div>
             <div class="col-md-6 col-xl-4">
@@ -120,9 +174,13 @@
             {% for song in highlights %}
             <div class="col-md-6 col-xl-3">
                 <article class="glass-card h-100 spotlight-card spotlight-link">
+                    <div class="song-artwork" style="{{ song.artwork_style }}">
+                        <span>{{ song.artwork_initials }}</span>
+                    </div>
                     <span class="badge-soft">{{ song.genre }}</span>
                     <h3><a class="stretched-link text-decoration-none text-reset" href="{{ url_for('song_detail', song_id=song.id) }}">{{ song.title }}</a></h3>
                     <p class="card-meta">{{ song.artist }}</p>
+                    <p class="spotlight-lyric">{{ song.lyric_moment }}</p>
                     <div class="tag-row mb-3">
                         {% for mood in song.moods %}
                         <span class="mood-tag">{{ mood }}</span>
@@ -144,31 +202,35 @@
 <section class="content-section">
     <div class="container py-5">
         <div class="section-heading narrow mb-4">
-            <span class="eyebrow">How It Works</span>
-            <h2>Simple discovery, built around what you feel like hearing</h2>
+            <span class="eyebrow">Discovery Carousels</span>
+            <h2>Move through moods, stories, and emotional energy</h2>
         </div>
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <article class="glass-card h-100 info-card home-info-card">
-                    <span class="badge-soft">1</span>
-                    <h3>Describe a feeling</h3>
-                    <p>Type something like “songs about healing after heartbreak.”</p>
-                </article>
-            </div>
-            <div class="col-lg-4">
-                <article class="glass-card h-100 info-card home-info-card">
-                    <span class="badge-soft">2</span>
-                    <h3>Explore matching songs</h3>
-                    <p>LyricLens finds songs with similar moods, themes, and emotional patterns.</p>
-                </article>
-            </div>
-            <div class="col-lg-4">
-                <article class="glass-card h-100 info-card home-info-card">
-                    <span class="badge-soft">3</span>
-                    <h3>Open and listen</h3>
-                    <p>Use Spotify links to jump from discovery to listening without breaking the mood.</p>
-                </article>
-            </div>
+        <div class="discovery-rails">
+            {% for rail in discovery_rails %}
+            <section class="discovery-rail-section">
+                <div class="d-flex align-items-end justify-content-between gap-3 mb-3">
+                    <div>
+                        <span class="eyebrow small">Curated Energy</span>
+                        <h3 class="discovery-rail-title">{{ rail.title }}</h3>
+                    </div>
+                </div>
+                <div class="discovery-rail-scroll">
+                    {% for song in rail.songs %}
+                    <a class="discovery-rail-card glass-card" href="{{ url_for('song_detail', song_id=song.id) }}">
+                        <div class="song-artwork song-artwork-small" style="{{ song.artwork_style }}">
+                            <span>{{ song.artwork_initials }}</span>
+                        </div>
+                        <div class="discovery-rail-copy">
+                            <span class="card-kicker">{{ song.genre }} · {{ song.era }}</span>
+                            <strong>{{ song.title }}</strong>
+                            <span>{{ song.artist }}</span>
+                            <p>{{ song.lyric_moment }}</p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
         </div>
     </div>
 </section>

@@ -17,9 +17,32 @@ def test_results_route_handles_real_search_query():
     response = client.get("/results?q=confidence+and+empowerment")
     assert response.status_code == 200
     assert b"Savage" in response.data
-    assert b"Open in Spotify" in response.data
-    assert b"Weak Match" not in response.data
-    assert b"How LyricLens finds related songs" in response.data
+    assert b"Listen on Spotify" in response.data
+    assert b"LyricLens Interpretation" in response.data
+    assert b"Explore Similar Songs" in response.data
+
+
+def test_results_route_shows_catalog_for_blank_query():
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/results")
+    assert response.status_code == 200
+    assert b"Browsing the full LyricLens song library" in response.data
+    assert b"Savage" in response.data
+    assert b"No songs matched those filters" not in response.data
+    assert response.data.count(b"Explore Similar Songs") == 10
+    assert b">2</a>" in response.data
+
+
+def test_results_route_supports_second_page_for_catalog_browse():
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/results?page=2")
+    assert response.status_code == 200
+    assert response.data.count(b"Explore Similar Songs") == 10
+    assert b"Showing: 10 of 20" in response.data
 
 
 def test_search_form_post_redirects_to_results():
@@ -56,6 +79,7 @@ def test_homepage_uses_mood_first_copy_without_stack_language():
     assert response.status_code == 200
     assert b"Find songs by feeling, not just by title." in response.data
     assert b"View Mood Dashboard" in response.data
+    assert b"Lyric Lens Moment" in response.data
     assert b"Technology Preview" not in response.data
     assert b"ChromaDB" not in response.data
     assert b"BERT" not in response.data
@@ -76,8 +100,9 @@ def test_song_detail_route_exposes_spotify_actions():
 
     response = client.get("/songs/1")
     assert response.status_code == 200
-    assert b"Open track in Spotify" in response.data
-    assert b"View artist on Spotify" in response.data
+    assert b"Listen on Spotify" in response.data
+    assert b"Artist on Spotify" in response.data
+    assert b"LyricLens Interpretation" in response.data
 
 
 def test_dashboard_route_uses_mood_intelligence_messaging():

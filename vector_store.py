@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from math import sqrt
 from pathlib import Path
+from threading import Lock
 
 from data_loader import load_songs
 from nlp_pipeline import DEFAULT_EMBEDDING_MODEL, clean_text, generate_embedding, prepare_corpus_embeddings
@@ -18,6 +19,8 @@ _STORE_STATE = {
 	"collection": None,
 	"records": {},
 }
+
+_STORE_LOCK = Lock()
 
 
 def initialize_vector_db(
@@ -74,6 +77,27 @@ def build_vector_collection(
 	return prepared_records
 
 
+def ensure_vector_collection(
+	songs: list[dict] | None = None,
+	model_name: str = DEFAULT_EMBEDDING_MODEL,
+	backend: str = "auto",
+	persist_directory: str | Path | None = None,
+) -> list[dict]:
+	if _STORE_STATE["records"]:
+		return list(_STORE_STATE["records"].values())
+
+	with _STORE_LOCK:
+		if _STORE_STATE["records"]:
+			return list(_STORE_STATE["records"].values())
+
+		return build_vector_collection(
+			songs=songs,
+			model_name=model_name,
+			backend=backend,
+			persist_directory=persist_directory,
+		)
+
+
 def add_song_embeddings(songs: list[dict]) -> None:
 	if _STORE_STATE["collection"] is None and _STORE_STATE["backend"] == "memory" and not _STORE_STATE["records"]:
 		initialize_vector_db(
@@ -104,7 +128,7 @@ def add_song_embeddings(songs: list[dict]) -> None:
 
 def search_similar_songs(query: str, top_k: int = 5, filters: dict | None = None) -> list[dict]:
 	if not _STORE_STATE["records"]:
-		build_vector_collection()
+		ensure_vector_collection()
 
 	normalized_query = clean_text(query)
 	query_embedding = generate_embedding(normalized_query)
@@ -129,7 +153,7 @@ def search_similar_songs(query: str, top_k: int = 5, filters: dict | None = None
 
 def get_related_songs(song_id: int, top_k: int = 3) -> list[dict]:
 	if not _STORE_STATE["records"]:
-		build_vector_collection()
+		ensure_vector_collection()
 
 	source_song = _STORE_STATE["records"].get(song_id)
 	if source_song is None:

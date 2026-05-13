@@ -29,6 +29,8 @@ def test_extract_keywords_falls_back_cleanly_when_spacy_is_unavailable(monkeypat
 def test_prepare_song_text_combines_expected_fields():
 	song = load_songs()[0]
 	prepared = prepare_song_text(song, include_keywords=False)
+	assert clean_text(song["lyric_moment"]) in prepared
+	assert clean_text(song["lyric_lens"]) in prepared
 	assert song["title"].lower() in prepared
 	assert song["artist"].lower() in prepared
 	assert clean_text(song["genre"]) in prepared
