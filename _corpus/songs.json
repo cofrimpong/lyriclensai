@@ -1,0 +1,202 @@
+[
+  {
+    "title": "Savage",
+    "artist": "Megan Thee Stallion",
+    "genre": "Hip-Hop / Rap",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/55CHeLEfn5iJ0IIkgaa4si",
+    "spotify_artist_url": "https://open.spotify.com/artist/181bsRPaVXVlUKXrxwZfHK",
+    "themes": ["confidence", "empowerment", "self-expression"],
+    "moods": ["bold", "energetic", "assertive"]
+  },
+  {
+    "title": "Her",
+    "artist": "Megan Thee Stallion",
+    "genre": "Hip-Hop / Rap",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/26autw8NAPd99QRh6KFgdl",
+    "spotify_artist_url": "https://open.spotify.com/artist/181bsRPaVXVlUKXrxwZfHK",
+    "themes": ["identity", "confidence", "fame"],
+    "moods": ["powerful", "stylish", "confident"]
+  },
+  {
+    "title": "Sativa",
+    "artist": "Jhené Aiko",
+    "genre": "R&B / Neo Soul",
+    "era": "2010s-2020s",
+    "spotify_track_url": "https://open.spotify.com/track/5oKxax66OjT1ZD8UTCy61h",
+    "spotify_artist_url": "https://open.spotify.com/artist/5ZS223C6JyBfXasXxrRqOk",
+    "themes": ["healing", "vulnerability", "reflection"],
+    "moods": ["calm", "dreamy", "emotional"]
+  },
+  {
+    "title": "my mine",
+    "artist": "Jhené Aiko",
+    "genre": "R&B / Neo Soul",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/2B8Y5LaNSEkuB3LA9okArd",
+    "spotify_artist_url": "https://open.spotify.com/artist/5ZS223C6JyBfXasXxrRqOk",
+    "themes": ["love", "peace", "self-reflection"],
+    "moods": ["soft", "dreamy", "intimate"]
+  },
+  {
+    "title": "Snooze",
+    "artist": "SZA",
+    "genre": "Alternative R&B",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/4iZ4pt7kvcaH6Yo8UoZ4s2",
+    "spotify_artist_url": "https://open.spotify.com/artist/7tYKF4w9nC0nq9CsPZTHyP",
+    "themes": ["love", "devotion", "relationships"],
+    "moods": ["warm", "emotional", "romantic"]
+  },
+  {
+    "title": "Good Days",
+    "artist": "SZA",
+    "genre": "Alternative R&B",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/3YJJjQPAbDT7mGpX3WtQ9A",
+    "spotify_artist_url": "https://open.spotify.com/artist/7tYKF4w9nC0nq9CsPZTHyP",
+    "themes": ["healing", "growth", "peace"],
+    "moods": ["reflective", "calm", "hopeful"]
+  },
+  {
+    "title": "Easy On Me",
+    "artist": "Adele",
+    "genre": "Pop / Soul",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/0gplL1WMoJ6iYaPgMCL0gX",
+    "spotify_artist_url": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY",
+    "themes": ["heartbreak", "change", "reflection"],
+    "moods": ["emotional", "melancholic", "mature"]
+  },
+  {
+    "title": "Someone Like You",
+    "artist": "Adele",
+    "genre": "Pop / Soul",
+    "era": "2010s",
+    "spotify_track_url": "https://open.spotify.com/track/4kflIGfjdZJW4ot2ioixTB",
+    "spotify_artist_url": "https://open.spotify.com/artist/4dpARuHxo51G3z768sgnrY",
+    "themes": ["loss", "heartbreak", "acceptance"],
+    "moods": ["sad", "nostalgic", "emotional"]
+  },
+  {
+    "title": "Calm Down",
+    "artist": "Rema",
+    "genre": "Afrobeats",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/0WtM2NBVQNNJLh6scP13H8",
+    "spotify_artist_url": "https://open.spotify.com/artist/46pWGuE3dSwY3bMMXGBvVS",
+    "themes": ["romance", "youth", "connection"],
+    "moods": ["smooth", "vibrant", "playful"]
+  },
+  {
+    "title": "Charm",
+    "artist": "Rema",
+    "genre": "Afrobeats",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/1Qrg8KqiBpW07V7PNxwwwL",
+    "spotify_artist_url": "https://open.spotify.com/artist/46pWGuE3dSwY3bMMXGBvVS",
+    "themes": ["confidence", "attraction", "celebration"],
+    "moods": ["upbeat", "smooth", "confident"]
+  },
+  {
+    "title": "Lonely At The Top",
+    "artist": "Asake",
+    "genre": "Afrobeats / Amapiano",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/0VXuCcriWRGvwMV1r5Yn9x",
+    "spotify_artist_url": "https://open.spotify.com/artist/3a1tBryiczPAZpgoZN9Rzg",
+    "themes": ["success", "pressure", "ambition"],
+    "moods": ["reflective", "motivational", "emotional"]
+  },
+  {
+    "title": "Amapiano",
+    "artist": "Asake",
+    "genre": "Afrobeats / Amapiano",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/6n6GJ6xYh4S2Y3VjA6z0G6",
+    "spotify_artist_url": "https://open.spotify.com/artist/3a1tBryiczPAZpgoZN9Rzg",
+    "themes": ["celebration", "energy", "freedom"],
+    "moods": ["upbeat", "party", "vibrant"]
+  },
+  {
+    "title": "Unavailable",
+    "artist": "Davido",
+    "genre": "Afrobeats",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/1vYXt7VSjH9JIM5oRRo7vA",
+    "spotify_artist_url": "https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh",
+    "themes": ["confidence", "freedom", "celebration"],
+    "moods": ["energetic", "upbeat", "playful"]
+  },
+  {
+    "title": "Feel",
+    "artist": "Davido",
+    "genre": "Afrobeats",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/4ybKrw4V9Mowon3LunlNB4",
+    "spotify_artist_url": "https://open.spotify.com/artist/0Y3agQaa6g2r0YmHPOO9rh",
+    "themes": ["love", "joy", "romance"],
+    "moods": ["warm", "smooth", "uplifting"]
+  },
+  {
+    "title": "Black Swan",
+    "artist": "BTS",
+    "genre": "K-Pop / Pop",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/2EmcTFQ1rM11wp2ztsXTHa",
+    "spotify_artist_url": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX",
+    "themes": ["identity", "pressure", "artistry"],
+    "moods": ["dramatic", "intense", "reflective"]
+  },
+  {
+    "title": "Dynamite",
+    "artist": "BTS",
+    "genre": "K-Pop / Pop",
+    "era": "2020s",
+    "spotify_track_url": "https://open.spotify.com/track/0t1kP63rueHleOhQkYSXFY",
+    "spotify_artist_url": "https://open.spotify.com/artist/3Nrfpe0tUJi4K4DXYWgMUX",
+    "themes": ["joy", "celebration", "positivity"],
+    "moods": ["bright", "upbeat", "happy"]
+  },
+  {
+    "title": "PILLOWTALK",
+    "artist": "Zayn",
+    "genre": "Pop / Alternative R&B",
+    "era": "2010s",
+    "spotify_track_url": "https://open.spotify.com/track/0PDUDa38GO8lMxLCRc4lL1",
+    "spotify_artist_url": "https://open.spotify.com/artist/5ZsFI1h6hIdQRw2ti0hz81",
+    "themes": ["love", "intimacy", "desire"],
+    "moods": ["sensual", "dark", "emotional"]
+  },
+  {
+    "title": "Dusk Till Dawn",
+    "artist": "Zayn",
+    "genre": "Pop / Alternative R&B",
+    "era": "2010s",
+    "spotify_track_url": "https://open.spotify.com/track/1j4kHkkpqZRBwE0A4CN4Yv",
+    "spotify_artist_url": "https://open.spotify.com/artist/5ZsFI1h6hIdQRw2ti0hz81",
+    "themes": ["loyalty", "love", "commitment"],
+    "moods": ["cinematic", "emotional", "hopeful"]
+  },
+  {
+    "title": "Billie Jean",
+    "artist": "Michael Jackson",
+    "genre": "Pop / Soul / Funk",
+    "era": "1980s",
+    "spotify_track_url": "https://open.spotify.com/track/5ChkMS8OtdzJeqyybCc9R5",
+    "spotify_artist_url": "https://open.spotify.com/artist/3fMbdgg4jU18AjLCKBhRSm",
+    "themes": ["fame", "trust", "pressure"],
+    "moods": ["groovy", "tense", "iconic"]
+  },
+  {
+    "title": "Man in the Mirror",
+    "artist": "Michael Jackson",
+    "genre": "Pop / Soul / Funk",
+    "era": "1980s",
+    "spotify_track_url": "https://open.spotify.com/track/7EsjkelQuoUlJXEw7SeVV4",
+    "spotify_artist_url": "https://open.spotify.com/artist/3fMbdgg4jU18AjLCKBhRSm",
+    "themes": ["reflection", "change", "social awareness"],
+    "moods": ["inspirational", "emotional", "uplifting"]
+  }
+]

@@ -1,0 +1,13 @@
+.venv/
+.venv-314-ai/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db

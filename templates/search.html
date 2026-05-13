@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | Search{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="section-heading narrow">
+            <span class="eyebrow">Search Interface</span>
+            <h1>Find songs by mood, meaning, and lyrical themes</h1>
+            <p>Use the controlled corpus to explore the interface now. Semantic ranking arrives later, but this page already supports query prompts and optional filters across genre, mood, era, and artist.</p>
+        </div>
+
+        <div class="search-shell mt-4">
+            <form method="post" class="search-form">
+                <label for="query" class="form-label">Describe what you want to hear</label>
+                <textarea id="query" name="query" class="form-control form-control-lg search-input" rows="4" placeholder="Try: songs about heartbreak and healing"></textarea>
+
+                <div class="prompt-chip-row mt-4">
+                    <button type="button" class="prompt-chip">heartbreak and healing</button>
+                    <button type="button" class="prompt-chip">confidence and self-worth</button>
+                    <button type="button" class="prompt-chip">fame and loneliness</button>
+                    <button type="button" class="prompt-chip">love and betrayal</button>
+                    <button type="button" class="prompt-chip">growth after pain</button>
+                    <button type="button" class="prompt-chip">celebration and freedom</button>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-md-3">
+                        <label class="filter-label" for="genre">Genre</label>
+                        <select class="form-select filter-input" id="genre" name="genre">
+                            <option value="">All genres</option>
+                            {% for genre in facets.genres %}
+                            <option value="{{ genre }}">{{ genre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="filter-label" for="mood">Mood</label>
+                        <select class="form-select filter-input" id="mood" name="mood">
+                            <option value="">All moods</option>
+                            {% for mood in facets.moods %}
+                            <option value="{{ mood }}">{{ mood }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="filter-label" for="era">Era</label>
+                        <select class="form-select filter-input" id="era" name="era">
+                            <option value="">All eras</option>
+                            {% for era in facets.eras %}
+                            <option value="{{ era }}">{{ era }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="filter-label" for="artist">Artist</label>
+                        <select class="form-select filter-input" id="artist" name="artist">
+                            <option value="">All artists</option>
+                            {% for artist in facets.artists %}
+                            <option value="{{ artist }}">{{ artist }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 mt-4">
+                    <button class="btn btn-glow btn-lg" type="submit">Search LyricLens AI</button>
+                    <span class="search-note">Current results are preview-ranked from the corpus until the full semantic search engine arrives.</span>
+                </div>
+            </form>
+        </div>
+
+        <div class="search-explainer row g-4 mt-2">
+            <div class="col-lg-4">
+                <div class="glass-card h-100 info-card">
+                    <span class="badge-soft">1</span>
+                    <h2>Describe the feeling</h2>
+                    <p>Start with a sentence, not exact lyrics. The intended experience is theme-first and mood-first discovery.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card h-100 info-card">
+                    <span class="badge-soft">2</span>
+                    <h2>Refine with filters</h2>
+                    <p>Optional controls let you narrow by genre, mood, era, or artist before the full semantic engine is added.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card h-100 info-card">
+                    <span class="badge-soft">3</span>
+                    <h2>Review ranked previews</h2>
+                    <p>Result cards already show tags, context, and match labels so the UI is ready for later vector-based scoring.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

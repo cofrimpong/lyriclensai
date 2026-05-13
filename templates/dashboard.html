@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="section-heading dashboard-heading">
+            <span class="eyebrow">Mood Intelligence</span>
+            <h1>Music Mood Intelligence Dashboard</h1>
+            <p>Explore the emotions, themes, genres, and artists powering semantic music discovery.</p>
+        </div>
+
+        <div class="glass-card dashboard-hero mt-4">
+            <div class="dashboard-hero-copy">
+                <span class="eyebrow">Discover By Meaning</span>
+                <h2>Explore music by mood, meaning, genre, and emotional energy.</h2>
+                <p>LyricLens AI helps users move beyond keywords and discover songs through emotional patterns, lyrical themes, artist voices, and genre character.</p>
+            </div>
+            <div class="dashboard-hero-note">
+                <span class="dashboard-hero-kicker">What this page helps you see</span>
+                <ul class="dashboard-hero-list">
+                    <li>What moods and themes the app can explore</li>
+                    <li>Which artists and genres shape the listening experience</li>
+                    <li>What kinds of meaning-based searches users can try</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card dashboard-metric h-100">
+                    <span>Songs Analyzed</span>
+                    <strong>{{ stats.total_songs }}</strong>
+                    <p>The listening set LyricLens understands right now.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card dashboard-metric h-100">
+                    <span>Artists Featured</span>
+                    <strong>{{ stats.artist_count }}</strong>
+                    <p>Distinct voices shaping the discovery experience.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card dashboard-metric h-100">
+                    <span>Music Genres</span>
+                    <strong>{{ stats.genre_count }}</strong>
+                    <p>Genre lanes users can explore through meaning.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-xl-3">
+                <div class="stat-card dashboard-metric h-100">
+                    <span>Emotional Themes</span>
+                    <strong>{{ stats.theme_count }}</strong>
+                    <p>Recurring ideas that power mood-based search.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-lg-7">
+                <div class="glass-card chart-card dashboard-chart-card h-100">
+                    <div class="chart-heading">
+                        <span class="eyebrow small">Mood And Theme Highlights</span>
+                        <h2>Emotional Themes</h2>
+                        <p>The meanings that show up most often across the songs.</p>
+                    </div>
+                    <canvas class="chart-canvas" data-chart-kind="bar" data-chart-axis="y" data-chart-label="Emotional Themes" data-chart-labels='{{ charts.themes["labels"] | tojson }}' data-chart-values='{{ charts.themes["values"] | tojson }}'></canvas>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="glass-card dashboard-mood-card h-100">
+                    <div class="chart-heading">
+                        <span class="eyebrow small">Mood And Theme Highlights</span>
+                        <h2>Mood Map</h2>
+                        <p>The emotional energy listeners are likely to encounter.</p>
+                    </div>
+                    <div class="dashboard-mood-constellation mt-3">
+                        {% for item in lists.moods %}
+                        <a class="dashboard-mood-node mood-tag dashboard-pill mood-level-{{ [item.value, 5] | min }}" href="{{ url_for('results', q=item.label, mood=item.label) }}">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.value }}</strong>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <p class="dashboard-mood-note mt-3">Tap any mood to jump into a matching search path.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-heading dashboard-subsection mt-5">
+            <span class="eyebrow">Featured Artists &amp; Sounds</span>
+            <h2>Artists, songs, and emotional lanes that define the experience</h2>
+            <p>A quick way to see who shapes LyricLens and what kind of feeling each artist brings into the discovery flow.</p>
+        </div>
+
+        <div class="row g-4 mt-1">
+            {% for artist in lists.artist_spotlights %}
+            <div class="col-lg-6 col-xl-4">
+                <article class="glass-card dashboard-artist-card h-100">
+                    <div class="dashboard-artist-head">
+                        <div>
+                            <span class="eyebrow small">Artist Spotlight</span>
+                            <h3>{{ artist.artist }}</h3>
+                        </div>
+                        {% if artist.spotify_artist_url %}
+                        <a class="btn btn-outline-light btn-sm" href="{{ artist.spotify_artist_url }}" target="_blank" rel="noopener noreferrer">Spotify</a>
+                        {% endif %}
+                    </div>
+                    <div class="dashboard-artist-meta mt-3">
+                        <div class="dashboard-artist-row">
+                            <span>Featured songs</span>
+                            <strong>{{ artist.songs | join(', ') }}</strong>
+                        </div>
+                        <div class="dashboard-artist-row">
+                            <span>Genre</span>
+                            <strong>{{ artist.genre }}</strong>
+                        </div>
+                        <div class="dashboard-artist-row">
+                            <span>Main emotional lane</span>
+                            <strong>{{ artist.emotional_lane }}</strong>
+                        </div>
+                    </div>
+                    <div class="action-row mt-4">
+                        <a class="btn btn-outline-light btn-sm" href="{{ url_for('results', q=artist.emotional_lane, artist=artist.artist) }}">Explore this artist</a>
+                        <a class="btn btn-glow btn-sm" href="{{ url_for('results', q=artist.emotional_lane) }}">Search this energy</a>
+                    </div>
+                </article>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4 mt-3">
+            <div class="col-lg-7">
+                <div class="glass-card dashboard-list-card h-100">
+                    <div class="chart-heading">
+                        <span class="eyebrow small">Genre Breakdown</span>
+                        <h2>Genre Mix</h2>
+                        <p>The styles that shape the discovery experience.</p>
+                    </div>
+                    <div class="dashboard-chip-grid mt-3">
+                        {% for item in lists.genres %}
+                        <div class="dashboard-chip-card">
+                            <span>{{ item.label }}</span>
+                            <strong>{{ item.value }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="glass-card dashboard-list-card h-100">
+                    <div class="chart-heading">
+                        <span class="eyebrow small">Era Breakdown</span>
+                        <h2>Era Flow</h2>
+                        <p>How the listening experience moves across decades.</p>
+                    </div>
+                    <div class="dashboard-era-grid mt-3">
+                        {% for label in charts.eras["labels"] %}
+                        <div class="dashboard-era-card">
+                            <span>{{ label }}</span>
+                            <strong>{{ charts.eras["values"][loop.index0] }}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card dashboard-search-card mt-4">
+            <div class="chart-heading">
+                <span class="eyebrow small">Search Inspiration</span>
+                <h2>Start With a Feeling</h2>
+                <p>Jump into LyricLens with mood-first prompts built for semantic music discovery.</p>
+            </div>
+            <div class="prompt-chip-row mt-3">
+                {% for prompt in [
+                    'heartbreak and healing',
+                    'confidence and empowerment',
+                    'fame and pressure',
+                    'joy and celebration',
+                    'love and intimacy',
+                    'identity and artistry',
+                    'growth and reflection'
+                ] %}
+                <a class="prompt-chip" href="{{ url_for('results', q=prompt) }}">{{ prompt }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="section-heading dashboard-subsection mt-5">
+            <span class="eyebrow">How LyricLens AI Finds Meaning</span>
+            <h2>Meaning-based discovery in plain language</h2>
+            <p>The app combines song context, language understanding, and vector similarity so users can search by feeling instead of exact wording.</p>
+        </div>
+
+        <div class="row g-4 mt-1">
+            <div class="col-lg-4">
+                <div class="glass-card dashboard-explainer-card h-100">
+                    <span class="badge-soft">1</span>
+                    <h3>Reads the Song Context</h3>
+                    <p>LyricLens uses summaries, moods, themes, genres, and eras to understand each song. spaCy helps clean and organize that context so the meaning is easier to compare.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card dashboard-explainer-card h-100">
+                    <span class="badge-soft">2</span>
+                    <h3>Turns Meaning Into Embeddings</h3>
+                    <p>BERT turns each song into a numerical meaning profile, so emotional ideas like healing, confidence, or intimacy can be matched even when the wording is different.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="glass-card dashboard-explainer-card h-100">
+                    <span class="badge-soft">3</span>
+                    <h3>Finds Similar Energy</h3>
+                    <p>A vector database compares those meaning profiles and surfaces songs with similar emotional energy, themes, and mood patterns for the user’s query.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

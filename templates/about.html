@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | About{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="section-heading narrow">
+            <span class="eyebrow">About The Project</span>
+            <h1>Why LyricLens AI exists</h1>
+            <p>LyricLens AI is being built as an AI and NLP portfolio project focused on semantic music discovery. The goal is to help users explore songs by emotional meaning instead of exact keyword matching.</p>
+        </div>
+
+        <div class="roadmap-banner mt-4">
+            <div>
+                <span class="badge-soft">Current Stage</span>
+                <h2 class="mt-3">Corpus and interface foundation are ready</h2>
+            </div>
+            <p class="mb-0">The app now has a controlled corpus, a responsive search UI, preview ranking, and a dashboard shell ready for the AI pipeline to take over.</p>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-lg-6">
+                <div class="glass-card h-100">
+                    <h2>Semantic Search</h2>
+                    <p>Queries will be cleaned with spaCy, embedded with Sentence-BERT, and matched against a curated song corpus using a vector database.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="glass-card h-100">
+                    <h2>Copyright-Safe Corpus</h2>
+                    <p>The project will use summaries, themes, moods, short safe excerpts, and structured metadata rather than full lyrics.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="glass-card h-100">
+                    <h2>Vector Search Plan</h2>
+                    <p>ChromaDB is the preferred vector store for semantic retrieval, with the same retrieval layer later supporting a chatbot-style exploration interface.</p>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="glass-card h-100">
+                    <h2>Build Roadmap</h2>
+                    <p>The app now has its core UI and corpus in place. The next sprints add NLP preprocessing, embeddings, vector search, testing, and documentation depth.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card timeline-card mt-4">
+            <span class="eyebrow">Future Build Path</span>
+            <div class="timeline-grid">
+                <div><strong>Sprint 4</strong><span>spaCy cleanup, keyword extraction, and prepared search text</span></div>
+                <div><strong>Sprint 5</strong><span>Sentence-BERT embeddings and ChromaDB semantic retrieval</span></div>
+                <div><strong>Sprint 6</strong><span>Search result explanations and richer song detail pages</span></div>
+                <div><strong>Sprint 7+</strong><span>Analytics module, testing, QA, docs, and chatbot planning</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

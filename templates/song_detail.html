@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | Song Detail{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-8">
+                <article class="glass-card h-100">
+                    <span class="eyebrow">Song Detail</span>
+                    <h1>{{ song.title }}</h1>
+                    <p class="card-meta mb-4">{{ song.artist }} · {{ song.genre }} · {{ song.era }}</p>
+                    <p>{{ song.summary }}</p>
+                    <div class="action-row mt-4">
+                        {% if song.spotify_track_url %}
+                        <a class="btn btn-spotify" href="{{ song.spotify_track_url }}" target="_blank" rel="noopener noreferrer">Open track in Spotify</a>
+                        {% endif %}
+                        {% if song.spotify_artist_url %}
+                        <a class="btn btn-outline-light" href="{{ song.spotify_artist_url }}" target="_blank" rel="noopener noreferrer">View artist on Spotify</a>
+                        {% endif %}
+                    </div>
+                    {% if song.safe_excerpt %}
+                    <div class="quote-panel mt-4">
+                        <span>Safe excerpt</span>
+                        <blockquote>{{ song.safe_excerpt }}</blockquote>
+                    </div>
+                    {% endif %}
+                    <div class="row g-4 mt-1">
+                        <div class="col-md-6">
+                            <h2 class="detail-heading">Themes</h2>
+                            <div class="tag-row">
+                                {% for theme in song.themes %}
+                                <span class="theme-tag">{{ theme }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="detail-heading">Moods</h2>
+                            <div class="tag-row">
+                                {% for mood in song.moods %}
+                                <span class="mood-tag">{{ mood }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-lg-4">
+                <aside class="glass-card h-100">
+                    <span class="eyebrow">Related Songs</span>
+                    <h2>Nearest semantic matches</h2>
+                    <div class="related-stack mt-3">
+                        {% for related in related_songs %}
+                        <a class="related-item" href="{{ url_for('song_detail', song_id=related.id) }}">
+                            <strong>{{ related.title }}</strong>
+                            <span>{{ related.artist }}{% if related.similarity is defined %} · {{ (related.similarity * 100) | round | int }}% match{% endif %}</span>
+                        </a>
+                        {% else %}
+                        <p class="mb-0">No related songs were found for this record.</p>
+                        {% endfor %}
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
