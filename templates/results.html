@@ -6,8 +6,8 @@
 <section class="page-section">
     <div class="container py-5">
         <div class="section-heading narrow">
-            <span class="eyebrow">Semantic Search Results</span>
-            <h1>Meaning-based matches from the controlled corpus</h1>
+            <span class="eyebrow">Search Results</span>
+            <h1>Songs connected to your mood, meaning, and theme search</h1>
             <p>{% if query %}Showing semantic matches for <strong>{{ query }}</strong>.{% else %}Enter a mood, theme, or idea from the search page to run the vector search flow.{% endif %}</p>
         </div>
 
@@ -57,7 +57,7 @@
         {% else %}
         <div class="glass-card mt-4 empty-state">
             <h2>No semantic matches found</h2>
-            <p>Try broader wording or remove one of the filters. The current search flow now runs through the prepared corpus and vector similarity layer.</p>
+            <p>Try broader wording or remove one of the filters to widen the emotional and thematic search space.</p>
             <a class="btn btn-outline-light mt-2" href="{{ url_for('search') }}">Back to Search</a>
         </div>
         {% endif %}

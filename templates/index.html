@@ -9,10 +9,10 @@
             <div class="col-lg-7">
                 <span class="eyebrow">Semantic Music Discovery</span>
                 <h1 class="display-4 hero-title">Discover songs by meaning, not just keywords.</h1>
-                <p class="hero-copy">LyricLens AI uses NLP, BERT embeddings, and vector search to explore music through emotion, themes, and semantic similarity.</p>
+                <p class="hero-copy">LyricLens AI is a live music discovery tool that helps users search songs by mood, meaning, genre, and emotional themes.</p>
                 <div class="hero-metrics mt-4">
-                    <div class="metric-pill"><strong>{{ total_songs }}</strong><span>curated songs in the controlled corpus</span></div>
-                    <div class="metric-pill"><strong>4 layers</strong><span>NLP, embeddings, vectors, analytics</span></div>
+                    <div class="metric-pill"><strong>{{ total_songs }}</strong><span>songs ready for meaning-based discovery</span></div>
+                    <div class="metric-pill"><strong>4 layers</strong><span>metadata, embeddings, vector search, analytics</span></div>
                 </div>
                 <div class="d-flex flex-wrap gap-3 mt-4">
                     <a class="btn btn-glow btn-lg" href="{{ url_for('search') }}">Search by mood, meaning, and theme</a>
@@ -21,14 +21,14 @@
             </div>
             <div class="col-lg-5">
                 <div class="feature-panel waveform-panel">
-                    <p class="panel-label">Launch Preview</p>
+                    <p class="panel-label">Discovery Signals</p>
                     <div class="wave-bars" aria-hidden="true">
                         <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
                     </div>
                     <ul class="feature-list">
                         <li>Natural language theme search</li>
-                        <li>Corpus-backed recommendation flow</li>
-                        <li>Dashboard analytics for music trends</li>
+                        <li>Mood-aware recommendation flow</li>
+                        <li>Dashboard intelligence for music patterns</li>
                         <li>Copyright-safe song descriptions</li>
                     </ul>
                 </div>
@@ -53,13 +53,13 @@
             <div class="col-md-4">
                 <article class="glass-card h-100">
                     <h2>AI + NLP Stack</h2>
-                    <p>Flask, spaCy, Sentence-BERT, ChromaDB, and analytics tooling are staged to power the full semantic search pipeline.</p>
+                    <p>Flask, optional NLP enrichment, Sentence-BERT, ChromaDB, and analytics tooling work together to power semantic music discovery.</p>
                 </article>
             </div>
             <div class="col-md-4">
                 <article class="glass-card h-100">
                     <h2>Portfolio-Ready UI</h2>
-                    <p>The interface now carries a more polished dark neon visual system intended for a strong music-tech demo experience.</p>
+                    <p>The interface uses a polished dark neon visual system built for a modern music-tech discovery experience.</p>
                 </article>
             </div>
         </div>
@@ -69,12 +69,12 @@
 <section class="content-section section-alt">
     <div class="container py-5">
         <div class="section-heading">
-            <span class="eyebrow">Technology Preview</span>
-            <h2>Built to grow into an AI music exploration platform</h2>
+            <span class="eyebrow">How It Works</span>
+            <h2>Built for live music discovery powered by meaning</h2>
         </div>
         <div class="row g-4 mt-2">
             <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Flask</span><strong>App foundation</strong></div></div>
-            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>spaCy</span><strong>Text cleanup and keywords</strong></div></div>
+            <div class="col-md-6 col-xl-3"><div class="stat-card"><span>NLP</span><strong>Text cleanup and keywords</strong></div></div>
             <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Sentence-BERT</span><strong>Semantic embeddings</strong></div></div>
             <div class="col-md-6 col-xl-3"><div class="stat-card"><span>ChromaDB</span><strong>Vector search layer</strong></div></div>
         </div>
@@ -84,8 +84,8 @@
 <section class="content-section">
     <div class="container py-5">
         <div class="section-heading narrow mb-4">
-            <span class="eyebrow">Corpus Highlights</span>
-            <h2>Preview the kind of songs LyricLens AI will surface</h2>
+            <span class="eyebrow">Featured Songs</span>
+            <h2>A sample of the songs LyricLens AI can surface by feeling and theme</h2>
         </div>
         <div class="row g-4">
             {% for song in highlights %}
