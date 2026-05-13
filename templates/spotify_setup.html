@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | Spotify Setup{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="section-heading narrow">
+            <span class="eyebrow">Spotify Setup</span>
+            <h1>Connect Spotify needs one callback URL configured first</h1>
+            <p>Spotify rejected the login start because the redirect URI must exactly match one of the callback URLs registered in your Spotify developer app.</p>
+        </div>
+
+        <div class="glass-card mt-4">
+            <h2 class="mb-3">Use this callback URL</h2>
+            <div class="toolbar-pill spotify-setup-uri">{{ redirect_uri }}</div>
+            <p class="mt-3 mb-2">Add that exact URL in your Spotify app settings under Redirect URIs, then set the same value in your environment:</p>
+            <div class="spotify-setup-code">SPOTIFY_REDIRECT_URI={{ redirect_uri }}</div>
+            <p class="mt-3 mb-0">After that, restart the app and click Connect Spotify again. Guest mode and the rest of LyricLens stay fully usable without Spotify login.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

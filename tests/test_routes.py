@@ -134,12 +134,28 @@ def test_spotify_connect_redirects_to_spotify_authorize(monkeypatch):
     monkeypatch.setattr("app.build_authorize_url", lambda *args, **kwargs: "https://accounts.spotify.com/authorize?client_id=test")
 
     app = create_app()
+    app.config["SPOTIFY_REDIRECT_URI"] = "https://example.com/spotify/callback"
     client = app.test_client()
 
     response = client.get("/spotify/connect")
 
     assert response.status_code == 302
     assert response.headers["Location"] == "https://accounts.spotify.com/authorize?client_id=test"
+
+
+def test_spotify_connect_shows_setup_screen_without_explicit_redirect_uri(monkeypatch):
+    monkeypatch.setattr("app.is_spotify_configured", lambda config: True)
+
+    app = create_app()
+    app.config["SPOTIFY_REDIRECT_URI"] = ""
+    client = app.test_client()
+
+    response = client.get("/spotify/connect")
+
+    assert response.status_code == 200
+    assert b"Connect Spotify needs one callback URL configured first" in response.data
+    assert b"SPOTIFY_REDIRECT_URI=" in response.data
+    assert b"/spotify/callback" in response.data
 
 
 def test_spotify_callback_stores_user_session(monkeypatch):

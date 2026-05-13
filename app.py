@@ -69,6 +69,10 @@ def get_spotify_redirect_uri(app: Flask) -> str:
     return url_for("spotify_callback", _external=True)
 
 
+def has_explicit_spotify_redirect_uri(app: Flask) -> bool:
+    return bool(app.config.get("SPOTIFY_REDIRECT_URI", "").strip())
+
+
 def get_spotify_user(app: Flask) -> dict | None:
     token_payload = session.get("spotify_token") or {}
     if not token_payload:
@@ -346,6 +350,12 @@ def create_app() -> Flask:
     def spotify_connect():
         if not is_spotify_configured(app.config):
             return redirect(url_for("index"))
+
+        if not has_explicit_spotify_redirect_uri(app):
+            return render_template(
+                "spotify_setup.html",
+                redirect_uri=get_spotify_redirect_uri(app),
+            )
 
         state = secrets.token_urlsafe(24)
         session["spotify_oauth_state"] = state

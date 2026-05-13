@@ -1619,6 +1619,22 @@ a {
     color: rgba(248, 250, 252, 0.82);
 }
 
+.spotify-setup-uri,
+.spotify-setup-code {
+    display: block;
+    width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.spotify-setup-code {
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(29, 185, 84, 0.22);
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(209, 250, 229, 0.94);
+    font-family: "Space Grotesk", sans-serif;
+}
+
 @media (max-width: 991.98px) {
     .chat-layout,
     .song-detail-shell,
