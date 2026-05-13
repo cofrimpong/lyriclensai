@@ -174,7 +174,10 @@
             {% for song in highlights %}
             <div class="col-md-6 col-xl-3">
                 <article class="glass-card h-100 spotlight-card spotlight-link">
-                    <div class="song-artwork" style="{{ song.artwork_style }}">
+                    <div class="song-artwork{% if song.has_album_art %} has-artwork-image{% endif %}" style="{{ song.artwork_style }}">
+                        {% if song.album_art_url %}
+                        <img class="song-artwork-image" src="{{ song.album_art_url }}" alt="{{ song.title }} album art" loading="lazy">
+                        {% endif %}
                         <span>{{ song.artwork_initials }}</span>
                     </div>
                     <span class="badge-soft">{{ song.genre }}</span>
@@ -217,7 +220,10 @@
                 <div class="discovery-rail-scroll">
                     {% for song in rail.songs %}
                     <a class="discovery-rail-card glass-card" href="{{ url_for('song_detail', song_id=song.id) }}">
-                        <div class="song-artwork song-artwork-small" style="{{ song.artwork_style }}">
+                        <div class="song-artwork song-artwork-small{% if song.has_album_art %} has-artwork-image{% endif %}" style="{{ song.artwork_style }}">
+                            {% if song.album_art_url %}
+                            <img class="song-artwork-image" src="{{ song.album_art_url }}" alt="{{ song.title }} album art" loading="lazy">
+                            {% endif %}
                             <span>{{ song.artwork_initials }}</span>
                         </div>
                         <div class="discovery-rail-copy">

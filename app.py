@@ -1,12 +1,24 @@
 import logging
+import secrets
+import time
 from hashlib import md5
 
-from flask import Flask, abort, redirect, render_template, request, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
 
 from analytics import build_dashboard_snapshot
+from chatbot import build_chat_response
 from config import Config
 from data_loader import load_songs
 from search_engine import semantic_search
+from spotify import (
+    build_authorize_url,
+    exchange_authorization_code,
+    fetch_current_user_profile,
+    get_track_metadata,
+    is_spotify_configured,
+    refresh_user_token,
+    warm_metadata_cache_async,
+)
 from vector_store import ensure_vector_collection, expand_genre_facets, get_related_songs
 
 
@@ -38,6 +50,63 @@ def find_song(song_id: int, songs: list[dict]) -> dict | None:
         if song["id"] == song_id:
             return song
     return None
+
+
+def build_spotify_user(profile: dict) -> dict:
+    external_urls = profile.get("external_urls") or {}
+    images = profile.get("images") or []
+    return {
+        "display_name": profile.get("display_name") or profile.get("id") or "Spotify",
+        "profile_url": external_urls.get("spotify", ""),
+        "avatar_url": images[0].get("url", "") if images else "",
+    }
+
+
+def get_spotify_redirect_uri(app: Flask) -> str:
+    configured_redirect_uri = app.config.get("SPOTIFY_REDIRECT_URI", "").strip()
+    if configured_redirect_uri:
+        return configured_redirect_uri
+    return url_for("spotify_callback", _external=True)
+
+
+def get_spotify_user(app: Flask) -> dict | None:
+    token_payload = session.get("spotify_token") or {}
+    if not token_payload:
+        return None
+
+    access_token = token_payload.get("access_token", "")
+    expires_at = float(token_payload.get("expires_at", 0) or 0)
+    if expires_at <= time.time() + 30:
+        refresh_token = token_payload.get("refresh_token", "")
+        if not refresh_token:
+            session.pop("spotify_token", None)
+            session.pop("spotify_user", None)
+            return None
+
+        refreshed_token = refresh_user_token(app.config, refresh_token)
+        access_token = refreshed_token.get("access_token", "")
+        if not access_token:
+            session.pop("spotify_token", None)
+            session.pop("spotify_user", None)
+            return None
+
+        session["spotify_token"] = {
+            "access_token": access_token,
+            "refresh_token": refreshed_token.get("refresh_token", refresh_token),
+            "expires_at": time.time() + int(refreshed_token.get("expires_in", 3600) or 3600),
+        }
+
+    spotify_user = session.get("spotify_user")
+    if spotify_user:
+        return spotify_user
+
+    profile = fetch_current_user_profile(access_token)
+    if not profile:
+        return None
+
+    spotify_user = build_spotify_user(profile)
+    session["spotify_user"] = spotify_user
+    return spotify_user
 
 
 def build_related_preview(song: dict, songs: list[dict]) -> list[dict]:
@@ -81,12 +150,19 @@ def filter_song_catalog(songs: list[dict], filters: dict) -> list[dict]:
     return filtered_songs
 
 
-def decorate_song(song: dict) -> dict:
+def decorate_song(song: dict, spotify_config: dict | None = None, allow_spotify_fetch: bool = False) -> dict:
     palette = build_song_palette(song)
     title_tokens = [token for token in song["title"].replace("-", " ").split() if token]
     artist_tokens = [token for token in song["artist"].split() if token]
     initials = "".join(token[0] for token in (title_tokens[:1] + artist_tokens[:1]) if token).upper()[:2] or song["title"][:2].upper()
     lyric_moment = song.get("lyric_moment") or song.get("safe_excerpt") or ""
+    spotify_metadata = {}
+    if spotify_config and is_spotify_configured(spotify_config):
+        try:
+            spotify_metadata = get_track_metadata(song.get("spotify_track_url", ""), spotify_config, allow_fetch=allow_spotify_fetch)
+        except Exception:
+            logging.getLogger(__name__).exception("Spotify metadata enrichment failed for '%s' by '%s'.", song["title"], song["artist"])
+            spotify_metadata = {}
 
     return {
         **song,
@@ -99,11 +175,15 @@ def decorate_song(song: dict) -> dict:
         ),
         "lyric_moment": lyric_moment,
         "lyric_lens": song.get("lyric_lens", song.get("summary", "")),
+        "album_art_url": spotify_metadata.get("album_art_url", ""),
+        "album_name": spotify_metadata.get("album_name", ""),
+        "spotify_uri": spotify_metadata.get("spotify_uri", ""),
+        "has_album_art": bool(spotify_metadata.get("album_art_url")),
     }
 
 
-def decorate_song_collection(songs: list[dict]) -> list[dict]:
-    return [decorate_song(song) for song in songs]
+def decorate_song_collection(songs: list[dict], spotify_config: dict | None = None, allow_spotify_fetch: bool = False) -> list[dict]:
+    return [decorate_song(song, spotify_config=spotify_config, allow_spotify_fetch=allow_spotify_fetch) for song in songs]
 
 
 def build_song_palette(song: dict) -> dict:
@@ -118,15 +198,15 @@ def build_song_palette(song: dict) -> dict:
     return palettes[int(digest[:2], 16) % len(palettes)]
 
 
-def build_homepage_rotating_lyrics(songs: list[dict]) -> list[dict]:
+def build_homepage_rotating_lyrics(songs: list[dict], spotify_config: dict | None = None) -> list[dict]:
     curated_titles = ["Good Days", "Lonely At The Top", "Man in the Mirror", "Snooze", "Someone Like You"]
     selected = [song for song in songs if song["title"] in curated_titles]
     if len(selected) < 4:
         selected = songs[:5]
-    return decorate_song_collection(selected[:5])
+    return decorate_song_collection(selected[:5], spotify_config=spotify_config)
 
 
-def build_discovery_rails(songs: list[dict]) -> list[dict]:
+def build_discovery_rails(songs: list[dict], spotify_config: dict | None = None) -> list[dict]:
     sections = [
         ("Healing & Reflection", {"themes": {"healing", "growth", "reflection", "peace"}, "moods": {"reflective", "hopeful", "calm", "emotional"}}),
         ("Love & Intimacy", {"themes": {"love", "romance", "relationships", "connection"}, "moods": {"romantic", "warm", "intimate", "soft"}}),
@@ -151,7 +231,7 @@ def build_discovery_rails(songs: list[dict]) -> list[dict]:
         rails.append(
             {
                 "title": title,
-                "songs": decorate_song_collection(picked[:6]),
+                "songs": decorate_song_collection(picked[:6], spotify_config=spotify_config),
             }
         )
 
@@ -171,17 +251,30 @@ def paginate_items(items: list[dict], page: int, page_size: int = 10) -> dict:
         "total_items": total_items,
         "page_size": page_size,
     }
+
+
 def create_app() -> Flask:
     configure_logging()
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    @app.context_processor
+    def inject_global_template_state() -> dict:
+        spotify_enabled = is_spotify_configured(app.config)
+        spotify_user = get_spotify_user(app) if spotify_enabled else None
+        return {
+            "spotify_enabled": spotify_enabled,
+            "spotify_user": spotify_user,
+        }
+
     @app.route("/")
     def index():
         songs = load_songs()
-        highlights = decorate_song_collection(songs[:4])
-        rotating_lyrics = build_homepage_rotating_lyrics(songs)
-        discovery_rails = build_discovery_rails(songs)
+        highlight_songs = songs[:4]
+        rotating_lyrics = build_homepage_rotating_lyrics(songs, spotify_config=app.config)
+        discovery_rails = build_discovery_rails(songs, spotify_config=app.config)
+        highlights = decorate_song_collection(highlight_songs, spotify_config=app.config)
+        warm_metadata_cache_async([song["spotify_track_url"] for song in highlight_songs], app.config)
         return render_template(
             "index.html",
             highlights=highlights,
@@ -220,8 +313,9 @@ def create_app() -> Flask:
             "artist": request.args.get("artist", "").strip(),
         }
         search_results = semantic_search(query, filters=filters, top_k=len(songs)) if query else filter_song_catalog(songs, filters)
-        search_results = decorate_song_collection(search_results)
+        search_results = decorate_song_collection(search_results, spotify_config=app.config)
         pagination = paginate_items(search_results, page=page, page_size=10)
+        warm_metadata_cache_async([song["spotify_track_url"] for song in pagination["items"]], app.config)
         return render_template(
             "results.html",
             query=query,
@@ -248,6 +342,69 @@ def create_app() -> Flask:
         ensure_vector_collection(songs=load_songs())
         return ("", 204)
 
+    @app.route("/spotify/connect")
+    def spotify_connect():
+        if not is_spotify_configured(app.config):
+            return redirect(url_for("index"))
+
+        state = secrets.token_urlsafe(24)
+        session["spotify_oauth_state"] = state
+        authorize_url = build_authorize_url(
+            app.config["SPOTIFY_CLIENT_ID"],
+            get_spotify_redirect_uri(app),
+            state,
+            app.config["SPOTIFY_SCOPES"],
+        )
+        return redirect(authorize_url)
+
+    @app.route("/spotify/callback")
+    def spotify_callback():
+        state = request.args.get("state", "")
+        expected_state = session.pop("spotify_oauth_state", "")
+        if not state or state != expected_state:
+            abort(400)
+
+        if request.args.get("error"):
+            return redirect(url_for("index"))
+
+        code = request.args.get("code", "")
+        if not code:
+            return redirect(url_for("index"))
+
+        token_payload = exchange_authorization_code(app.config, code, get_spotify_redirect_uri(app))
+        access_token = token_payload.get("access_token", "")
+        if not access_token:
+            return redirect(url_for("index"))
+
+        session["spotify_token"] = {
+            "access_token": access_token,
+            "refresh_token": token_payload.get("refresh_token", ""),
+            "expires_at": time.time() + int(token_payload.get("expires_in", 3600) or 3600),
+        }
+
+        profile = fetch_current_user_profile(access_token)
+        if profile:
+            session["spotify_user"] = build_spotify_user(profile)
+
+        return redirect(url_for("index"))
+
+    @app.route("/spotify/disconnect")
+    def spotify_disconnect():
+        session.pop("spotify_oauth_state", None)
+        session.pop("spotify_token", None)
+        session.pop("spotify_user", None)
+        return redirect(request.referrer or url_for("index"))
+
+    @app.route("/chat")
+    def chat():
+        return render_template("chat.html")
+
+    @app.post("/api/chat")
+    def api_chat():
+        payload = request.get_json(silent=True) or {}
+        query = str(payload.get("query", "") or "").strip()
+        return jsonify(build_chat_response(query))
+
     @app.route("/songs/<int:song_id>")
     def song_detail(song_id: int):
         songs = load_songs()
@@ -255,11 +412,12 @@ def create_app() -> Flask:
         if song is None:
             abort(404)
 
-        decorated_song = decorate_song(song)
+        decorated_song = decorate_song(song, spotify_config=app.config, allow_spotify_fetch=True)
         related_songs = get_related_songs(song_id, top_k=3, allow_cold_start=False)
         if not related_songs:
             related_songs = build_related_preview(song, songs)
-        related_songs = decorate_song_collection(related_songs)
+        related_songs = decorate_song_collection(related_songs, spotify_config=app.config)
+        warm_metadata_cache_async([related_song["spotify_track_url"] for related_song in related_songs], app.config)
         return render_template("song_detail.html", song=decorated_song, related_songs=related_songs)
 
     @app.route("/about")

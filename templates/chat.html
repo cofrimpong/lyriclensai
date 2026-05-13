@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}LyricLens AI | Chat{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container py-5">
+        <div class="section-heading narrow">
+            <span class="eyebrow">Library Chat</span>
+            <h1>Ask LyricLens about moods, lyrics, themes, artists, and recommendations</h1>
+            <p>This chat answers only from the current LyricLens music library. If a question goes beyond the dataset, it will say so directly.</p>
+        </div>
+
+        <div class="chat-layout mt-4">
+            <aside class="glass-card chat-side-panel">
+                <span class="eyebrow small">Prompt Ideas</span>
+                <div class="chat-chip-stack mt-3">
+                    <button class="prompt-chip chat-prompt" type="button">Recommend songs for heartbreak and healing</button>
+                    <button class="prompt-chip chat-prompt" type="button">What songs explore fame and pressure?</button>
+                    <button class="prompt-chip chat-prompt" type="button">Which songs feel confident and powerful?</button>
+                    <button class="prompt-chip chat-prompt" type="button">Show songs about growth and reflection</button>
+                    <button class="prompt-chip chat-prompt" type="button">What songs by SZA are in the library?</button>
+                </div>
+            </aside>
+
+            <section class="glass-card chat-shell">
+                <div id="chatMessages" class="chat-messages" aria-live="polite">
+                    <article class="chat-message chat-message-bot">
+                        <span class="chat-role">LyricLens</span>
+                        <p>I can help with moods, themes, artists, lyrics, and recommendations from the current LyricLens music library.</p>
+                    </article>
+                </div>
+
+                <form id="chatForm" class="chat-form mt-4">
+                    <label class="form-label" for="chatQuery">Ask about the library</label>
+                    <textarea id="chatQuery" class="form-control form-control-lg search-input" rows="3" placeholder="Try: songs for healing after heartbreak"></textarea>
+                    <div class="d-flex flex-wrap align-items-center gap-3 mt-3">
+                        <button class="btn btn-glow" type="submit">Ask LyricLens</button>
+                        <p id="chatStatus" class="chat-status mb-0">Answers stay grounded in the current dataset.</p>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

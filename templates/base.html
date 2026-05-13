@@ -41,7 +41,12 @@
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ url_for('chat') }}">Chat</a></li>
                             <li class="nav-item ms-lg-2"><a class="btn btn-glow" href="{{ url_for('search') }}">Try Search</a></li>
+                            <li class="nav-item ms-lg-2"><a class="btn btn-spotify" href="{{ url_for('spotify_connect') if not spotify_user else (spotify_user.profile_url or url_for('spotify_disconnect')) }}" {% if spotify_user and spotify_user.profile_url %}target="_blank" rel="noopener noreferrer"{% endif %}>{% if spotify_user %}Spotify Connected{% else %}Connect Spotify{% endif %}</a></li>
+                            {% if spotify_user %}
+                            <li class="nav-item"><a class="nav-link spotify-status-link" href="{{ url_for('spotify_disconnect') }}">{{ spotify_user.display_name }}</a></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -64,5 +69,6 @@
     <script src="{{ url_for('static', filename='js/search.js') }}"></script>
     <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -26,7 +26,10 @@
             <div class="col-lg-6">
                 <article class="glass-card result-card result-experience-card h-100">
                     <div class="result-top-row">
-                        <div class="song-artwork result-artwork" style="{{ result.artwork_style }}">
+                        <div class="song-artwork result-artwork{% if result.has_album_art %} has-artwork-image{% endif %}" style="{{ result.artwork_style }}">
+                            {% if result.album_art_url %}
+                            <img class="song-artwork-image" src="{{ result.album_art_url }}" alt="{{ result.title }} album art" loading="lazy">
+                            {% endif %}
                             <span>{{ result.artwork_initials }}</span>
                         </div>
                         <div class="result-top-copy">

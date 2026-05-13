@@ -8,13 +8,19 @@
         <div class="song-detail-shell">
             <article class="glass-card song-detail-main">
                 <div class="song-detail-hero">
-                    <div class="song-artwork song-artwork-large" style="{{ song.artwork_style }}">
+                    <div class="song-artwork song-artwork-large{% if song.has_album_art %} has-artwork-image{% endif %}" style="{{ song.artwork_style }}">
+                        {% if song.album_art_url %}
+                        <img class="song-artwork-image" src="{{ song.album_art_url }}" alt="{{ song.title }} album art" loading="lazy">
+                        {% endif %}
                         <span>{{ song.artwork_initials }}</span>
                     </div>
                     <div class="song-detail-copy">
                         <span class="eyebrow">Song Detail</span>
                         <h1>{{ song.title }}</h1>
                         <p class="card-meta mb-3">{{ song.artist }} · {{ song.genre }} · {{ song.era }}</p>
+                        {% if song.album_name %}
+                        <p class="album-meta">Album: {{ song.album_name }}</p>
+                        {% endif %}
                         <div class="tag-row mb-4">
                             {% for mood in song.moods %}
                             <span class="mood-tag">{{ mood }}</span>
@@ -50,7 +56,10 @@
                 <div class="related-stack mt-3">
                     {% for related in related_songs %}
                     <a class="related-item related-song-card" href="{{ url_for('song_detail', song_id=related.id) }}">
-                        <div class="song-artwork song-artwork-small" style="{{ related.artwork_style }}">
+                        <div class="song-artwork song-artwork-small{% if related.has_album_art %} has-artwork-image{% endif %}" style="{{ related.artwork_style }}">
+                            {% if related.album_art_url %}
+                            <img class="song-artwork-image" src="{{ related.album_art_url }}" alt="{{ related.title }} album art" loading="lazy">
+                            {% endif %}
                             <span>{{ related.artwork_initials }}</span>
                         </div>
                         <div class="related-song-copy">

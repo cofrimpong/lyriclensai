@@ -5,7 +5,7 @@ def test_core_routes_load():
     app = create_app()
     client = app.test_client()
 
-    for route in ["/", "/search", "/results", "/dashboard", "/about", "/songs/1"]:
+    for route in ["/", "/search", "/results", "/dashboard", "/about", "/songs/1", "/chat"]:
         response = client.get(route)
         assert response.status_code == 200
 
@@ -81,6 +81,8 @@ def test_homepage_uses_mood_first_copy_without_stack_language():
     assert b"View Mood Dashboard" in response.data
     assert b"Lyric Lens Moment" in response.data
     assert b"/warmup" not in response.data
+    assert b"Connect Spotify" in response.data
+    assert b"Chat" in response.data
     assert b"Technology Preview" not in response.data
     assert b"ChromaDB" not in response.data
     assert b"BERT" not in response.data
@@ -104,6 +106,93 @@ def test_song_detail_route_exposes_spotify_actions():
     assert b"Listen on Spotify" in response.data
     assert b"Artist on Spotify" in response.data
     assert b"LyricLens Interpretation" in response.data
+
+
+def test_song_detail_route_renders_album_art_when_spotify_metadata_is_available(monkeypatch):
+    monkeypatch.setattr("app.is_spotify_configured", lambda config: True)
+    monkeypatch.setattr(
+        "app.get_track_metadata",
+        lambda *args, **kwargs: {
+            "album_art_url": "https://images.example.test/album.jpg",
+            "album_name": "Test Album",
+            "spotify_uri": "spotify:track:test",
+        },
+    )
+
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/songs/1")
+
+    assert response.status_code == 200
+    assert b"images.example.test/album.jpg" in response.data
+    assert b"Album: Test Album" in response.data
+
+
+def test_spotify_connect_redirects_to_spotify_authorize(monkeypatch):
+    monkeypatch.setattr("app.is_spotify_configured", lambda config: True)
+    monkeypatch.setattr("app.build_authorize_url", lambda *args, **kwargs: "https://accounts.spotify.com/authorize?client_id=test")
+
+    app = create_app()
+    client = app.test_client()
+
+    response = client.get("/spotify/connect")
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "https://accounts.spotify.com/authorize?client_id=test"
+
+
+def test_spotify_callback_stores_user_session(monkeypatch):
+    monkeypatch.setattr(
+        "app.exchange_authorization_code",
+        lambda *args, **kwargs: {
+            "access_token": "access-token",
+            "refresh_token": "refresh-token",
+            "expires_in": 3600,
+        },
+    )
+    monkeypatch.setattr(
+        "app.fetch_current_user_profile",
+        lambda access_token: {
+            "display_name": "Test Listener",
+            "external_urls": {"spotify": "https://open.spotify.com/user/test-listener"},
+            "images": [],
+        },
+    )
+
+    app = create_app()
+    client = app.test_client()
+
+    with client.session_transaction() as session_state:
+        session_state["spotify_oauth_state"] = "expected-state"
+
+    response = client.get("/spotify/callback?code=spotify-code&state=expected-state")
+
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/")
+    with client.session_transaction() as session_state:
+        assert session_state["spotify_user"]["display_name"] == "Test Listener"
+        assert session_state["spotify_token"]["access_token"] == "access-token"
+
+
+def test_chat_api_returns_dataset_bounded_response(monkeypatch):
+    monkeypatch.setattr(
+        "app.build_chat_response",
+        lambda query: {
+            "answer": "I can only answer from the current LyricLens music library.",
+            "matches": [{"id": 1, "title": "Good Days", "artist": "SZA", "reason": "Match from the dataset.", "lyric_moment": "Good day in my mind"}],
+        },
+    )
+
+    app = create_app()
+    client = app.test_client()
+
+    response = client.post("/api/chat", json={"query": "songs for healing"})
+
+    assert response.status_code == 200
+    payload = response.get_json()
+    assert payload["answer"] == "I can only answer from the current LyricLens music library."
+    assert payload["matches"][0]["title"] == "Good Days"
 
 
 def test_dashboard_route_uses_mood_intelligence_messaging():
