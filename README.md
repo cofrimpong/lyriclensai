@@ -1,192 +1,322 @@
 # LyricLens AI
 
-LyricLens AI is a semantic music theme explorer built as an AI/NLP portfolio project. The application uses Flask for the web layer, a controlled corpus of copyright-safe song descriptions, regex-based text preprocessing with optional spaCy enhancement, Sentence-BERT for embeddings, and a vector search layer for meaning-based retrieval.
+LyricLens AI is an AI-powered emotional music discovery platform that helps users explore songs through moods, lyrical meaning, themes, emotional interpretation, and semantic similarity search.
 
-## Overview
+Instead of searching music only by artist or title, LyricLens AI allows users to discover songs through feelings, experiences, emotional states, and lyrical storytelling. The platform combines natural language processing, embeddings, vector databases, Spotify integration, and interactive UI design to create a modern music exploration experience.
 
-Users can search for ideas such as heartbreak, healing, confidence, loneliness, or growth without relying on exact lyric keywords. The system prepares song descriptions, themes, moods, genre labels, and era metadata for semantic retrieval and dashboard analytics.
+Live Site: https://lyriclensai.onrender.com
 
-Current implemented areas:
+---
 
-- Flask app shell and routed pages
-- controlled corpus with 20 structured song entries
-- dark neon music-tech UI
-- NLP preprocessing and embedding preparation
-- vector search and related-song retrieval
-- analytics dashboard payloads and chart rendering
-- automated pytest suite
+# Features
 
-## Features
+## Emotional Music Discovery
+Users can search music through:
+- emotions
+- moods
+- themes
+- relationship situations
+- personal experiences
+- lyrical meaning
 
-- Meaning-first search experience through [app.py](app.py)
-- Controlled corpus and schema validation in [_corpus/songs.json](_corpus/songs.json) and [data_loader.py](data_loader.py)
-- NLP helpers in [nlp_pipeline.py](nlp_pipeline.py)
-- Vector store and semantic search in [vector_store.py](vector_store.py) and [search_engine.py](search_engine.py)
-- Dashboard analytics in [analytics.py](analytics.py)
-- Responsive interface templates in [templates](templates)
+Examples:
+- heartbreak
+- healing
+- confidence
+- self growth
+- loneliness
+- motivation
+- celebration
+- emotional vulnerability
 
-## Tech Stack
+---
 
-- Backend: Python, Flask
-- NLP: regex-based fallback with optional spaCy enhancement
-- Embeddings: Sentence-BERT via `sentence-transformers`
-- Vector store: ChromaDB with in-memory fallback support
-- Data: JSON corpus
-- Frontend: HTML, CSS, Bootstrap 5, Chart.js
-- Testing: pytest
+## Semantic Search with NLP
+LyricLens AI uses Natural Language Processing techniques to understand the emotional meaning behind songs instead of relying only on keyword matching.
 
-## Screenshots
+The system analyzes:
+- lyric moments
+- emotional interpretation
+- moods
+- themes
+- genres
+- artist context
 
-Screenshot capture and insertion are still pending. The intended screenshot set should include:
+This allows semantically similar songs to be recommended even when exact words are not used in the search query.
 
-- homepage hero and corpus highlight cards
-- search page with filters and prompt chips
-- semantic results page with similarity cards
-- dashboard charts and summary metrics
+---
 
-## Project Structure
+# AI / NLP Technologies Used
+
+## Sentence Transformers
+Sentence Transformers are used to generate semantic embeddings for emotional music search.
+
+## ChromaDB Vector Database
+ChromaDB stores vector embeddings for similarity matching and semantic retrieval.
+
+## Spotify API Integration
+Spotify Web API integration provides:
+- album artwork
+- track metadata
+- popularity information
+- artist links
+- Spotify authentication
+
+## Flask Backend
+The application backend is built using Flask and handles:
+- routing
+- search processing
+- Spotify OAuth
+- semantic recommendation logic
+- chatbot interaction
+- vector search handling
+
+---
+
+# Core Functionalities
+
+## Semantic Search Engine
+Users can search for songs using emotional or descriptive language rather than exact titles.
+
+Examples:
+- "songs about healing"
+- "music for confidence"
+- "feeling emotionally lost"
+- "songs about pressure and success"
+
+The application returns semantically related songs using vector similarity search.
+
+---
+
+## Lyric Moments
+Each song contains a highlighted lyrical moment that emotionally represents the song.
+
+Example:
+> “Still wanna try, still believe in good days.”
+
+These lyric moments help create emotional connection and music storytelling throughout the platform.
+
+---
+
+## Emotional Interpretation
+Every song includes a “LyricLens Interpretation” section that explains:
+- emotional themes
+- lyrical meaning
+- emotional atmosphere
+- song context
+
+---
+
+## Spotify Connect
+Users can connect their Spotify accounts through Spotify OAuth authentication.
+
+Spotify integration supports:
+- artist pages
+- track links
+- album artwork
+- external listening experience
+
+---
+
+## Chatbot Interface
+LyricLens AI includes a music discovery chatbot that:
+- answers from the current LyricLens dataset
+- recommends songs based on moods and emotions
+- explains lyrical themes
+- suggests emotionally similar songs
+
+The chatbot is constrained to the existing music library to reduce hallucinations and improve recommendation quality.
+
+---
+
+# User Experience Design
+
+The platform was designed to feel immersive, emotional, and modern.
+
+UI/UX features include:
+- glassmorphism styling
+- glowing hover effects
+- animated gradients
+- rotating lyric hero sections
+- emotional discovery carousels
+- responsive mobile design
+- Spotify-inspired visual elements
+- floating musical note animations
+
+The design goal was to create a cinematic emotional music discovery experience.
+
+---
+
+# Dataset Structure
+
+Songs are stored inside:
+```text
+_corpus/songs.json
+````
+
+Each song contains:
+
+* title
+* artist
+* genre
+* era
+* moods
+* themes
+* lyric_moment
+* lyric_lens
+* Spotify URLs
+
+---
+
+# Project Architecture
 
 ```text
-lyriclensai/
-├── app.py
-├── config.py
-├── data_loader.py
-├── nlp_pipeline.py
-├── vector_store.py
-├── search_engine.py
-├── analytics.py
-├── requirements.txt
-├── requirements-ai.txt
-├── README.md
-├── _corpus/
-├── templates/
-├── static/
-├── vector_db/
-├── tests/
-└── docs/
+Frontend
+│
+├── HTML / CSS / JavaScript
+├── Glassmorphism UI
+├── Dynamic search interface
+└── Interactive music cards
+
+Backend
+│
+├── Flask
+├── Semantic search logic
+├── Spotify OAuth
+├── Spotify metadata enrichment
+├── Chatbot routing
+└── API handling
+
+AI Layer
+│
+├── Sentence Transformers
+├── Embedding generation
+├── ChromaDB vector storage
+└── Semantic similarity matching
 ```
 
-## Python Environments
+---
 
-This project currently uses two environments on this machine:
+# Deployment
 
-- `.venv` for the lightweight Flask app setup
-- `.venv-314-ai` for the AI stack and full project validation
+LyricLens AI is deployed on Render.
 
-Use the AI environment for NLP, embeddings, vector search, analytics, and full pytest runs.
+Production deployment includes:
 
-Verify the active interpreter with:
+* lazy model loading
+* persistent ChromaDB handling
+* Spotify metadata caching
+* memory optimization
+* stable vector search architecture
 
-```powershell
-python -c "import sys; print(sys.executable)"
+---
+
+# Local Installation
+
+## Clone Repository
+
+```bash
+git clone https://github.com/cofrimpong/lyriclensai.git
+cd lyriclensai
 ```
 
-The AI environment should report:
+---
 
-```text
-C:\Users\cof\lyriclensai\.venv-314-ai\Scripts\python.exe
-```
+## Create Virtual Environment
 
-## Installation
-
-Base environment setup:
-
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
 ```
 
-AI environment setup:
+Activate environment:
 
-```powershell
-python -m venv .venv-314-ai
-.\.venv-314-ai\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-python -m pip install -r requirements-ai.txt
+### Windows
+
+```bash
+.venv\Scripts\activate
 ```
 
-Optional local spaCy enhancement:
+### Mac/Linux
 
-```powershell
-python -m spacy download en_core_web_sm
+```bash
+source .venv/bin/activate
 ```
 
-## How To Run The App
+---
 
-Recommended command:
+## Install Dependencies
 
-```powershell
-.\.venv-314-ai\Scripts\python.exe app.py
+```bash
+pip install -r requirements.txt
 ```
 
-Or with Flask:
+---
 
-```powershell
-.\.venv-314-ai\Scripts\python.exe -m flask run
+# Environment Variables
+
+Create a `.env` file:
+
+```env
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
+SPOTIFY_REDIRECT_URI=https://lyriclensai.onrender.com/spotify/callback
 ```
 
-## How To Run Tests
+---
 
-Run the full suite:
+# Run Application
 
-```powershell
-.\.venv-314-ai\Scripts\python.exe -m pytest
+```bash
+python app.py
 ```
 
-Run targeted slices:
+---
 
-```powershell
-.\.venv-314-ai\Scripts\python.exe -m pytest tests/test_nlp_pipeline.py
-.\.venv-314-ai\Scripts\python.exe -m pytest tests/test_vector_store.py tests/test_search_engine.py
-.\.venv-314-ai\Scripts\python.exe -m pytest tests/test_analytics.py tests/test_routes.py
+# Testing
+
+Run automated tests:
+
+```bash
+pytest
 ```
 
-## Embeddings And Search
+Testing includes:
 
-The search pipeline prepares each song record by combining title, artist, genre, era, themes, moods, summary, and safe excerpt into searchable text. Sentence-BERT embeddings are then generated through the shared model interface in [nlp_pipeline.py](nlp_pipeline.py), and the vector search layer ranks matches through [vector_store.py](vector_store.py) and [search_engine.py](search_engine.py).
+* semantic search
+* route handling
+* Spotify integration
+* chatbot responses
+* vector persistence
+* UI rendering logic
 
-## spaCy And BERT Usage
+---
 
-- The app always supports regex/string-based text normalization and keyword extraction
-- spaCy is an optional local enhancement for richer keyword extraction where the model is available
-- Sentence-BERT is used for dense semantic embeddings through the `all-MiniLM-L6-v2` model
-- the app retains fallback behavior so modules can still import safely even when a heavyweight ML dependency is unavailable
+# Future Improvements
 
-## Copyright-Safe Corpus Approach
+Potential future enhancements include:
 
-The project avoids full copyrighted lyrics. The corpus uses:
+* playlist generation
+* deeper Spotify personalization
+* expanded music corpus
+* advanced recommendation analytics
+* emotion clustering visualizations
+* real-time lyric embedding updates
+* user mood history tracking
 
-- original summaries
-- themes and moods
-- short safe excerpts
-- structured metadata fields
+---
 
-See [_corpus/corpus_notes.md](_corpus/corpus_notes.md) and [_corpus/source_rules.md](_corpus/source_rules.md) for the governing rules.
+# Author
 
-## Current Status
+Christabel Frimpong
 
-Completed through Sprint 8:
+Site:
+[lyriclensai.onrender.com/](LyricLensAI)
 
-- project scaffold and Flask routes
-- corpus creation and validation
-- UI/UX build
-- NLP pipeline
-- vector search
-- real search/result wiring
-- analytics module
-- automated testing
+---
 
-Remaining major areas:
+# License
 
-- QA documentation refinement
-- final project specs polish
-- final chatbot integration plan usage in later sprint
+This project was created for educational, portfolio, and AI/NLP learning purposes.
 
-## Future Chatbot Integration
-
-The chatbot remains intentionally deferred until the rest of the application is stable. See [docs/chatbot-integration-plan.md](docs/chatbot-integration-plan.md).
-
-## Author
-
-LyricLens AI is being built as an IS421 final project and portfolio-ready AI/NLP demo application.
+```
+```
