@@ -301,13 +301,20 @@ def _hydrate_records_from_collection() -> None:
 		return
 
 	stored = collection.get(include=["embeddings", "documents", "metadatas"])
+	metadatas_value = stored.get("metadatas")
+	documents_value = stored.get("documents")
+	embeddings_value = stored.get("embeddings")
+	metadatas = list(metadatas_value) if metadatas_value is not None else []
+	documents = list(documents_value) if documents_value is not None else []
+	embeddings = list(embeddings_value) if embeddings_value is not None else []
 	records: dict[int, dict] = {}
 	for index, song_id in enumerate(stored.get("ids", [])):
 		numeric_id = int(song_id)
 		base_song = dict(_STORE_STATE["song_index"].get(numeric_id, {}))
-		metadata = stored.get("metadatas", [])[index] or {}
-		document = stored.get("documents", [])[index] or base_song.get("search_text", "")
-		embedding = stored.get("embeddings", [])[index] or []
+		metadata = metadatas[index] if index < len(metadatas) and metadatas[index] is not None else {}
+		document = documents[index] if index < len(documents) and documents[index] is not None else base_song.get("search_text", "")
+		raw_embedding = embeddings[index] if index < len(embeddings) and embeddings[index] is not None else []
+		embedding = raw_embedding.tolist() if hasattr(raw_embedding, "tolist") else list(raw_embedding)
 		records[numeric_id] = {
 			**base_song,
 			**_metadata_to_song_fields(metadata),

@@ -1,3 +1,6 @@
+import numpy as np
+
+import vector_store
 from data_loader import load_songs
 from vector_store import build_vector_collection, expand_genre_facets, get_related_songs, initialize_vector_db, search_similar_songs
 
@@ -48,3 +51,39 @@ def test_get_related_songs_returns_empty_list_for_missing_song():
 	build_vector_collection(songs=load_songs(), backend="memory")
 
 	assert get_related_songs(9999, top_k=3) == []
+
+
+def test_ensure_vector_collection_hydrates_numpy_embeddings_without_falling_back():
+	song = load_songs()[0]
+	vector_store._STORE_STATE.update(
+		{
+			"backend": "chroma",
+			"collection": _FakeCollection(song),
+			"records": {},
+			"song_index": {song["id"]: dict(song)},
+			"status": "idle",
+			"initialized": True,
+		}
+	)
+
+	records = vector_store.ensure_vector_collection()
+
+	assert records
+	assert records[0]["id"] == song["id"]
+	assert records[0]["embedding"] == [0.1, 0.2, 0.3]
+
+
+class _FakeCollection:
+	def __init__(self, song: dict):
+		self.song = song
+
+	def count(self) -> int:
+		return 1
+
+	def get(self, include: list[str] | None = None) -> dict:
+		return {
+			"ids": [str(self.song["id"])],
+			"documents": [self.song["search_text"]],
+			"metadatas": [vector_store._build_metadata(self.song)],
+			"embeddings": np.array([np.array([0.1, 0.2, 0.3])], dtype=object),
+		}
