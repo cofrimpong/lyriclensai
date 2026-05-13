@@ -1,6 +1,6 @@
 # LyricLens AI
 
-LyricLens AI is a semantic music theme explorer built as an AI/NLP portfolio project. The application uses Flask for the web layer, a controlled corpus of copyright-safe song descriptions, spaCy for text preprocessing, Sentence-BERT for embeddings, and a vector search layer for meaning-based retrieval.
+LyricLens AI is a semantic music theme explorer built as an AI/NLP portfolio project. The application uses Flask for the web layer, a controlled corpus of copyright-safe song descriptions, regex-based text preprocessing with optional spaCy enhancement, Sentence-BERT for embeddings, and a vector search layer for meaning-based retrieval.
 
 ## Overview
 
@@ -28,7 +28,7 @@ Current implemented areas:
 ## Tech Stack
 
 - Backend: Python, Flask
-- NLP: spaCy
+- NLP: regex-based fallback with optional spaCy enhancement
 - Embeddings: Sentence-BERT via `sentence-transformers`
 - Vector store: ChromaDB with in-memory fallback support
 - Data: JSON corpus
@@ -104,6 +104,11 @@ python -m venv .venv-314-ai
 .\.venv-314-ai\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python -m pip install -r requirements-ai.txt
+```
+
+Optional local spaCy enhancement:
+
+```powershell
 python -m spacy download en_core_web_sm
 ```
 
@@ -143,7 +148,8 @@ The search pipeline prepares each song record by combining title, artist, genre,
 
 ## spaCy And BERT Usage
 
-- spaCy is used for text normalization and keyword extraction where the model is available
+- The app always supports regex/string-based text normalization and keyword extraction
+- spaCy is an optional local enhancement for richer keyword extraction where the model is available
 - Sentence-BERT is used for dense semantic embeddings through the `all-MiniLM-L6-v2` model
 - the app retains fallback behavior so modules can still import safely even when a heavyweight ML dependency is unavailable
 

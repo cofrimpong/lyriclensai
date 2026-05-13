@@ -19,6 +19,13 @@ def test_extract_keywords_returns_useful_tokens_without_spacy():
 	assert "healing" in keywords
 
 
+def test_extract_keywords_falls_back_cleanly_when_spacy_is_unavailable(monkeypatch):
+	monkeypatch.setattr("nlp_pipeline.load_spacy_model", lambda: None)
+	keywords = extract_keywords("songs about confidence, self-worth, and healing after pressure")
+	assert "confidence" in keywords
+	assert "self-worth" in keywords
+
+
 def test_prepare_song_text_combines_expected_fields():
 	song = load_songs()[0]
 	prepared = prepare_song_text(song, include_keywords=False)

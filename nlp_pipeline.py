@@ -32,22 +32,36 @@ FALLBACK_STOP_WORDS = {
 	"with",
 }
 
+FALLBACK_TOKEN_PATTERN = re.compile(r"[a-z0-9&'-]+")
+
+
+def _normalize_basic_text(text: str) -> str:
+	text = (text or "").lower().strip()
+	text = re.sub(r"\s+", " ", text)
+	text = re.sub(r"[^a-z0-9&'\-\s]", " ", text)
+	return re.sub(r"\s+", " ", text).strip()
+
+
+def _fallback_tokens(text: str, remove_stop_words: bool = False) -> list[str]:
+	normalized = _normalize_basic_text(text)
+	if not normalized:
+		return []
+
+	tokens = FALLBACK_TOKEN_PATTERN.findall(normalized)
+	if not remove_stop_words:
+		return tokens
+
+	return [token for token in tokens if token not in FALLBACK_STOP_WORDS]
+
 
 def clean_text(text: str, remove_stop_words: bool = False) -> str:
 	"""Normalize text for search preparation and embedding input."""
-	normalized = re.sub(r"\s+", " ", text.lower()).strip()
-	normalized = re.sub(r"[^a-z0-9&'\-\s]", "", normalized)
-	normalized = re.sub(r"\s+", " ", normalized).strip()
-
-	if not remove_stop_words:
-		return normalized
-
-	return " ".join(token for token in normalized.split() if token not in FALLBACK_STOP_WORDS)
+	return " ".join(_fallback_tokens(text, remove_stop_words=remove_stop_words))
 
 
 @lru_cache(maxsize=1)
 def load_spacy_model():
-	"""Load spaCy lazily so the rest of the project can run without it."""
+	"""Load spaCy lazily when available, but allow the app to run without it."""
 	try:
 		import spacy
 	except ImportError:
@@ -90,7 +104,7 @@ def extract_keywords(text: str, limit: int = 8) -> list[str]:
 		return keywords[:limit]
 
 	tokens = []
-	for token in cleaned.split():
+	for token in _fallback_tokens(text, remove_stop_words=True):
 		if token in FALLBACK_STOP_WORDS or len(token) < 4:
 			continue
 		if token not in tokens:
