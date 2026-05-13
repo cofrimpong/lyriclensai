@@ -309,8 +309,8 @@ Potential future enhancements include:
 
 Christabel Frimpong
 
-Site:
-[lyriclensai.onrender.com/](LyricLensAI)
+GitHub:
+[https://github.com/cofrimpong](https://github.com/cofrimpong)
 
 ---
 
