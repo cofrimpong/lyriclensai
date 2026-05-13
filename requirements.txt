@@ -4,7 +4,6 @@ pytest==8.3.2
 
 sentence-transformers==3.0.1
 chromadb==0.5.5
-pandas==2.2.2
 
 gunicorn
 numpy
